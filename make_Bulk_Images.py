@@ -65,10 +65,14 @@ myoutput3.flush()
 
 tree = ET.parse(IGV)
 root = tree.getroot()
-root[0][0].set('path', os.path.join(bulkpath,  bulkBrain, bulkBrain + bam)) #bulk bam
-root[0][1].set('path', os.path.join(bulkpath,  bulkBrain, bulkBrain + L1HS_bam)) #L1HS bam
-root[1][0].set('id', os.path.join(bulkpath,  bulkBrain, bulkBrain + bam)) #bulk bam
-root[2][0].set('id', os.path.join(bulkpath,  bulkBrain, bulkBrain + L1HS_bam)) #L1HS bam
+root[0][0].set('path', os.path.join(bulkpath, bulkBrain, bulkBrain + bam)) #bulk bam
+root[0][1].set('path', os.path.join(bulkpath, bulkBrain, bulkBrain + L1HS_bam)) #L1HS bam
+root[0][2].set('path', os.path.join(basepath, TenX_S3_File)) #10X Bulk Brain
+root[0][3].set('path', os.path.join(basepath, basepath, UMAP_S3_File)) #UMAP Mapability                                    
+root[1][0].set('id', os.path.join(bulkpath, bulkBrain, bulkBrain + bam)) #bulk bam
+root[2][0].set('id', os.path.join(bulkpath, bulkBrain, bulkBrain + L1HS_bam)) #L1HS bam
+root[3][0].set('id', os.path.join(basepath, TenX_S3_File)) #10X Bulk Brain
+root[4][0].set('id', os.path.join(basepath, UMAP_S3_File)) #UMAP Mapability                               
 tree.write(os.path.join(bulkpath,  bulkBrain, bulkBrain + igv))
 
 myinput_loci = os.path.join(bulkpath, bulkBrain, bulkBrain + coverage15k_gt100)
