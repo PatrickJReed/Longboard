@@ -1,7 +1,7 @@
 # longboard
 
 <img src="https://surferart.com/wp-content/uploads/2013/05/Longboard-5.jpg" align="right"
-     title="longboard" width="512" height="391">
+     title="longboard" width="256" height="195">
 Fun in the sun
 
 longboard is an scalable, cloud based deep learning pipeline for the detection of somatic LINE-1 retrotransposition events from SLAV-Seq datasets.
