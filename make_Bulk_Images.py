@@ -30,6 +30,8 @@ genome_regions = "hs37d5_15K_Windows.bed"
 L1HS_bam = "-L1HS_mapped.bam"
 L1HS_bam_bai = "-L1HS_mapped.bam.bai"
 L1HS = "/home/ubuntu/Analysis/rmask_L1HS_Correct.bed"
+TenX_S3_File = ""
+UMAP_S3_Files = ""
 bam = "-ready.bam"
 igv = "-igv.xml"
 bed = ".bed"
@@ -37,7 +39,7 @@ coverage15k = ".coverage15k"
 coverage15k_gt100 = ".coverage15kgt100"
 loci = ".loci"
 ##IGV Template
-IGV = "/home/ubuntu/Analysis/IGV_template.xml"
+IGV = "/home/ubuntu/Analysis/IGV_Bulk_template.xml"
 cci = cc.get_interface('salk-logg-bsmn', ACCESS_KEY='AKIAJNNOA6QMT7HXF6GA', SECRET_KEY='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', endpoint_url='https://s3-us-west-1.amazonaws.com')
 bulkBrain = sys.argv[1] #input
 

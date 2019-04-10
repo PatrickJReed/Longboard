@@ -138,6 +138,6 @@ for i in xrange(0, len(worklist), batchsize):
     print s3_response2
     for file in glob.glob("*.png"):
         os.remove(file)
-s3_response3 = cci.upload_raw_array('Analysis/'+cell+'/'+cell+'_IDs.npy', cell_ids)
+s3_response3 = cci.upload_raw_array('Analysis/'+cell+'/'+cell+'_IDs.npy', np.array(cell_ids))
 print s3_response3
 print "Done with Sample: "+cell
