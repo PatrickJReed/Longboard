@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Session genome="hg19" hasGeneTrack="false" hasSequenceTrack="false" locus="All" path="/home/ubuntu/Analysis/IGV-template.xml" version="8">
+    <Resources>
+        <Resource path="/home/ubuntu/Analysis/04132016_mw_1571_SC_B4_S48/04132016_mw_1571_SC_B4_S48-L1HS_mapped.bam"/>
+        <Resource path="/home/ubuntu/Analysis/04132016_mw_1571_SC_B4_S48/04132016_mw_1571_SC_B4_S48-ready.bam"/>
+        <Resource path="https://s3-us-west-1.amazonaws.com/salk-logg-bsmn/Analysis/KKI-CE001-PFC-10X_phased_possorted_bam.bam"/>
+	<Resource path="/home/ubuntu/Analysis/rmask_L1HS.bed"/>
+        <Resource path="/home/ubuntu/Analysis/rmask_L1PA2.bed"/>
+        <Resource path="/home/ubuntu/Analysis/rmask_L1PA3.bed"/>
+        <Resource path="/home/ubuntu/Analysis/rmask_L1PA4.bed"/>
+        <Resource path="/home/ubuntu/Analysis/rmask_L1PA5.bed"/>
+        <Resource path="/home/ubuntu/Analysis/rmask_L1_other.bed"/>
+    </Resources>
+    <Panel height="500" name="Panel1503598985949" width="2000">
+        <Track altColor="0,0,178" autoScale="false" color="0,0,178" displayMode="SQUISHED" experimentType="OTHER" featureVisibilityWindow="-1" fontSize="10" id="/home/ubuntu/Analysis/04132016_mw_1571_SC_B4_S48/04132016_mw_1571_SC_B4_S48-L1HS_mapped.bam" name="" sortable="true" visible="true">
+            <RenderOptions colorOption="READ_STRAND" shadeBasesOption="NONE" showMismatches="false" viewPairs="true"/>
+        </Track>
+    </Panel>
+    <Panel height="500" name="Panel1503599005103" width="2000">
+        <Track altColor="0,0,178" autoScale="false" color="0,0,178" displayMode="SQUISHED" experimentType="OTHER" featureVisibilityWindow="-1" fontSize="10" id="/home/ubuntu/Analysis/04132016_mw_1571_SC_B4_S48/04132016_mw_1571_SC_B4_S48-ready.bam" name="" sortable="true" visible="true">
+            <RenderOptions colorOption="READ_STRAND" shadeBasesOption="NONE" showMismatches="false" viewPairs="true"/>
+        </Track>
+    </Panel>
+    <Panel height="500" name="Panel1503599005103" width="2000">
+        <Track altColor="0,0,178" autoScale="false" color="0,0,178" displayMode="SQUISHED" experimentType="OTHER" featureVisibilityWindow="-1" fontSize="10" id="https://s3-us-west-1.amazonaws.com/salk-logg-bsmn/Analysis/KKI-CE001-PFC-10X_phased_possorted_bam.bam" name="" sortable="true" visible="true">
+            <RenderOptions colorOption="READ_STRAND" shadeBasesOption="NONE" showMismatches="false" viewPairs="true"/>
+        </Track>
+    </Panel>
+    <Panel height="250" name="FeaturePanel" width="2000">
+        <Track altColor="0,0,178" autoScale="false" clazz="org.broad.igv.track.FeatureTrack" color="255,0,0" colorScale="ContinuousColorScale;0.0;8.0;255,255,255;255,0,0" displayMode="COLLAPSED" featureVisibilityWindow="-1" fontSize="0" id="/home/ubuntu/Analysis/rmask_L1HS.bed" name="rmask_L1HS.bed" renderer="BASIC_FEATURE" sortable="false" visible="true" windowFunction="count">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="8.0" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="0,0,178" autoScale="false" clazz="org.broad.igv.track.FeatureTrack" color="0,255,0" colorScale="ContinuousColorScale;0.0;17.0;255,255,255;0,255,0" displayMode="COLLAPSED" featureVisibilityWindow="-1" fontSize="0" id="/home/ubuntu/Analysis/rmask_L1PA2.bed" name="rmask_L1PA2.bed" renderer="BASIC_FEATURE" sortable="false" visible="true" windowFunction="count">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="17.0" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="0,0,178" autoScale="false" clazz="org.broad.igv.track.FeatureTrack" color="0,255,0" colorScale="ContinuousColorScale;0.0;31.0;255,255,255;0,255,0" displayMode="COLLAPSED" featureVisibilityWindow="-1" fontSize="0" id="/home/ubuntu/Analysis/rmask_L1PA3.bed" name="rmask_L1PA3.bed" renderer="BASIC_FEATURE" sortable="false" visible="true" windowFunction="count">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="31.0" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="0,0,178" autoScale="false" clazz="org.broad.igv.track.FeatureTrack" color="0,255,0" colorScale="ContinuousColorScale;0.0;37.0;255,255,255;0,255,0" displayMode="COLLAPSED" featureVisibilityWindow="-1" fontSize="0" id="/home/ubuntu/Analysis/rmask_L1PA4.bed" name="rmask_L1PA4.bed" renderer="BASIC_FEATURE" sortable="false" visible="true" windowFunction="count">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="37.0" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="0,0,178" autoScale="false" clazz="org.broad.igv.track.FeatureTrack" color="0,255,0" colorScale="ContinuousColorScale;0.0;27.0;255,255,255;0,255,0" displayMode="COLLAPSED" featureVisibilityWindow="-1" fontSize="0" id="/home/ubuntu/Analysis/rmask_L1PA5.bed" name="rmask_L1PA5.bed" renderer="BASIC_FEATURE" sortable="false" visible="true" windowFunction="count">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="27.0" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="0,0,178" autoScale="false" clazz="org.broad.igv.track.FeatureTrack" color="0,0,255" colorScale="ContinuousColorScale;0.0;1399.0;255,255,255;0,0,255" displayMode="COLLAPSED" featureVisibilityWindow="-1" fontSize="0" id="/home/ubuntu/Analysis/rmask_L1_other.bed" name="rmask_L1_other.bed" renderer="BASIC_FEATURE" sortable="false" visible="true" windowFunction="count">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="1399.0" minimum="0.0" type="LINEAR"/>
+        </Track>
+    </Panel>
+    <PanelLayout dividerFractions="0.005,0.26916666666666667,0.525,0.7875"/>
+    <HiddenAttributes>
+        <Attribute name="DATA FILE"/>
+        <Attribute name="DATA TYPE"/>
+        <Attribute name="NAME"/>
+    </HiddenAttributes>
+</Session>
