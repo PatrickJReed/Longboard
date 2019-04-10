@@ -7,24 +7,18 @@ import uuid
 import os.path
 import csv
 import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib import offsetbox
 from time import time
 from subprocess import (call, Popen, PIPE)
 from itertools import product
-from sklearn import (manifold, datasets, decomposition, ensemble, discriminant_analysis, random_projection)
-from sklearn.decomposition import PCA
-from sklearn.utils import shuffle
 from IPython.display import Image
 from PIL import Image
 from IPython.display import Image as IPImage
 import shutil
-#import pybedtools
-#import pysam
 import re
-import xml.etree.ElementTree as ET
-import time
- 
+import xml.etree.ElementTree as ET 
+from boto3.session import Session
+import boto3
+
 ##Path to Data
 path = "/home/ubuntu/"
 genome_regions = "hs37d5_15K_Windows.bed"
@@ -32,19 +26,37 @@ L1HS_bam = "-L1HS_mapped.bam"
 L1HS_bam_bai = "-L1HS_mapped.bam.bai"
 L1HS = "/home/ubuntu/rmask_L1HS_Correct.bed"
 bam = "-ready.bam"
+bai = "-ready.bam.bai"
 igv = "-igv.xml"
 bed = ".bed"
 coverage15k = ".coverage15k"
 coverage15k_gt100 = ".coverage15kgt100"
 loci = ".loci"
 ##IGV Template
-IGV = "/home/ubuntu/IGV_template.xml"
-cci = cc.get_interface('salk-logg-bsmn', ACCESS_KEY='AKIAJNNOA6QMT7HXF6GA', SECRET_KEY='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', endpoint_url='https://s3-us-west-1.amazonaws.com')
+IGV = "/home/ubuntu/longboard/IGV_template.xml"
 subject = sys.argv[1]  #subjectid
 cell = sys.argv[2] #input
-
-
+ACCESS_KEY = 'AKIAJNNOA6QMT7HXF6GA'
+SECRET_KEY = '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'
+cci = cc.get_interface('salk-logg-bsmn', ACCESS_KEY=ACCESS_KEY, SECRET_KEY=SECRET_KEY, endpoint_url='https://s3-us-west-1.amazonaws.com')
 print cell
+
+
+##Load Data
+session = Session(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_KEY)
+s3 = session.resource('s3')
+your_bucket = s3.Bucket('longboard-sc')
+for s3_file in your_bucket.objects.all():
+    s3 = boto3.client ('s3')
+    s3.download_file('longboard-sc',s3_file.key,s3_file.key)
+
+#Bam
+s3.download_file('bsmn-data',os.path.join(subject, cell, cell + bam),os.path.join(subject, cell, cell + bam))
+s3.download_file('bsmn-data',os.path.join(subject, cell, cell + bai),os.path.join(subject, cell, cell + bai))
+
+
+
+
 myoutput = open(os.path.join(path, cell, cell + L1HS_bam), 'w')
 p1 = Popen(['java', '-jar', '/home/ubuntu/jvarkit/dist/samviewwithmate.jar', '-b', L1HS, '--samoutputformat', 'BAM', os.path.join(path,  cell, cell + bam)], stdout=myoutput)
 p1.wait()
@@ -102,7 +114,7 @@ for i in xrange(0, len(worklist), batchsize):
             for last in f0: pass
             firstpic = cell+"_"+"*"+first.strip().split(':')[0]+"_"+first.strip().split(':')[1].split('-')[0]+"_"+first.strip().split(':')[1].split('-')[1]+".png"
             lastpic = cell+"_"+"*"+last.strip().split(':')[0]+"_"+last.strip().split(':')[1].split('-')[0]+"_"+last.strip().split(':')[1].split('-')[1]+".png"
-            if not (glob.glob(os.path.join(path, cell, firstpic)) or glob.glob(os.path.join(path, cell, lastpic))):
+            if not (glob.glob(os.path.join(path, cell, firstpic)) or glob.glob(os.path.join(pathup, cell, lastpic))):
                 p = Popen(['igv_plotter', '-o', cell+"_", '-L', file, '-v', '--max-panel-height', '1000', '--igv-jar-path', '/home/ubuntu/IGV_2.4.10/igv.jar', '-m', '6G', '-g', 'hg19', os.path.join(path, cell, cell + igv)])
                 procs.append(p)
     for pp in procs:
