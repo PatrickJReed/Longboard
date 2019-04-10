@@ -4,7 +4,7 @@
         <Resource path="/home/ubuntu/Analysis/04132016_mw_1571_SC_B4_S48/04132016_mw_1571_SC_B4_S48-L1HS_mapped.bam"/>
         <Resource path="/home/ubuntu/Analysis/04132016_mw_1571_SC_B4_S48/04132016_mw_1571_SC_B4_S48-ready.bam"/>
         <Resource path="https://s3-us-west-1.amazonaws.com/salk-logg-bsmn/Analysis/KKI-CE001-PFC-10X_phased_possorted_bam.bam"/>
-	<Resource path="/home/ubuntu/Analysis/rmask_L1HS.bed"/>
+	    <Resource path="/home/ubuntu/Analysis/rmask_L1HS.bed"/>
         <Resource path="/home/ubuntu/Analysis/rmask_L1PA2.bed"/>
         <Resource path="/home/ubuntu/Analysis/rmask_L1PA3.bed"/>
         <Resource path="/home/ubuntu/Analysis/rmask_L1PA4.bed"/>
