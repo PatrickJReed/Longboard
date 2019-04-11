@@ -13,12 +13,12 @@ from itertools import product
 from PIL import Image
 import shutil
 import re
-import xml.etree.ElementTree as ET 
+import xml.etree.ElementTree as ET
 from boto3.session import Session
 import boto3
 
 ##Path to Data
-path = "/home/ubuntu/"
+basepath = "/home/ubuntu/"
 genome_regions = "hs37d5_15K_Windows.bed"
 L1HS_bam = "-L1HS_mapped.bam"
 L1HS_bam_bai = "-L1HS_mapped.bam.bai"
@@ -48,27 +48,27 @@ for s3_file in your_bucket.objects.all():
     s3 = boto3.client ('s3')
     s3.download_file('longboard-sc',s3_file.key,s3_file.key)
 #Bam
-s3.download_file('bsmn-data',os.path.join(subject, cell, cell + bam),os.path.join(path,cell + bam))
-s3.download_file('bsmn-data',os.path.join(subject, cell, cell + bai),os.path.join(path,cell + bai))
+s3.download_file('bsmn-data',os.path.join(subject, cell, cell + bam),os.path.join(basepath,cell + bam))
+s3.download_file('bsmn-data',os.path.join(subject, cell, cell + bai),os.path.join(basepath,cell + bai))
 
 
 
 
-myoutput = open(os.path.join(path, cell + L1HS_bam), 'w')
-p1 = Popen(['java', '-jar', '/home/ubuntu/jvarkit/dist/samviewwithmate.jar', '-b', L1HS, '--samoutputformat', 'BAM', os.path.join(path, cell + bam)], stdout=myoutput)
+myoutput = open(os.path.join(basepath, cell + L1HS_bam), 'w')
+p1 = Popen(['java', '-jar', '/home/ubuntu/jvarkit/dist/samviewwithmate.jar', '-b', L1HS, '--samoutputformat', 'BAM', os.path.join(basepath, cell + bam)], stdout=myoutput)
 p1.wait()
 myoutput.close()
 
-p2 = Popen(['samtools', 'index', os.path.join(path, cell + L1HS_bam)])
+p2 = Popen(['samtools', 'index', os.path.join(basepath, cell + L1HS_bam)])
 p2.wait()
 
-myoutput2 = open(os.path.join(path, cell + coverage15k), 'w')
-p3 = Popen(['bedtools', 'multicov', '-bams', os.path.join(path, cell + bam), '-bed', os.path.join(path,genome_regions)], stdout=myoutput2)
+myoutput2 = open(os.path.join(basepath, cell + coverage15k), 'w')
+p3 = Popen(['bedtools', 'multicov', '-bams', os.path.join(basepath, cell + bam), '-bed', os.path.join(basepath,genome_regions)], stdout=myoutput2)
 p3.wait()
 myoutput2.close()
 
-myinput3 = open(os.path.join(path, cell + coverage15k), 'r')
-myoutput3 = open(os.path.join(path, cell + coverage15k_gt100), 'w')
+myinput3 = open(os.path.join(basepath, cell + coverage15k), 'r')
+myoutput3 = open(os.path.join(basepath, cell + coverage15k_gt100), 'w')
 awk_cmd = "{ if ($4 > 100) { print } }"
 proc = Popen(['awk', awk_cmd], stdin=myinput3, stdout=myoutput3)
 proc.wait()
@@ -76,25 +76,25 @@ myoutput3.flush()
 
 tree = ET.parse(IGV)
 root = tree.getroot()
-root[0][0].set('path', os.path.join(path, cell + bam)) #sc bam
-root[0][1].set('path', os.path.join(path, cell + L1HS_bam)) #L1HS bam
-root[1][0].set('id', os.path.join(path, cell + bam)) #sc bam
-root[2][0].set('id', os.path.join(path, cell + L1HS_bam)) #L1HS bam
-tree.write(os.path.join(path, cell + igv))
+root[0][0].set('path', os.path.join(basepath, cell + bam)) #sc bam
+root[0][1].set('path', os.path.join(basepath, cell + L1HS_bam)) #L1HS bam
+root[1][0].set('id', os.path.join(basepath, cell + bam)) #sc bam
+root[2][0].set('id', os.path.join(basepath, cell + L1HS_bam)) #L1HS bam
+tree.write(os.path.join(basepath, cell + igv))
 
-myinput_loci = os.path.join(path, cell + coverage15k_gt100)
-myoutput_loci = os.path.join(path, cell + loci)
+myinput_loci = os.path.join(basepath, cell + coverage15k_gt100)
+myoutput_loci = os.path.join(basepath, cell + loci)
 with open(myoutput_loci, 'w') as outfile:
 	with open(myinput_loci, 'r') as infile:
         	data = infile.readlines()
         	for region in data:
                 	row = [str(region.strip().split('\t')[0]),":",str(region.strip().split('\t')[1]),"-",str(region.strip().split('\t')[2])]
                 	outfile.write("".join(row)+'\n')
-Popen(['split', '-l', '100', '-d', os.path.join(path, cell + loci), os.path.join(path, cell + ".locisplit")]).wait()
+Popen(['split', '-l', '100', '-d', os.path.join(basepath, cell + loci), os.path.join(basepath, cell + ".locisplit")]).wait()
 
 print cell
 cell_ids = []
-locifile = os.path.join(path, cell + loci)
+locifile = os.path.join(basepath, cell + loci)
 worklist = glob.glob("*.locisplit*")
 batchsize = 16
 print len(worklist)
@@ -105,12 +105,12 @@ for i in xrange(0, len(worklist), batchsize):
     procs = []
     for file in batch:
         print file
-        with open(os.path.join(path, file)) as f0:
+        with open(os.path.join(basepath, file)) as f0:
             first = f0.readline()# Read the first line.
             for last in f0: pass
             firstpic = cell+"-"+"*"+first.strip().split(':')[0]+"_"+first.strip().split(':')[1].split('-')[0]+"_"+first.strip().split(':')[1].split('-')[1]+".png"
             lastpic = cell+"-"+"*"+last.strip().split(':')[0]+"_"+last.strip().split(':')[1].split('-')[0]+"_"+last.strip().split(':')[1].split('-')[1]+".png"
-	    if not (glob.glob(os.path.join(path, firstpic)) or glob.glob(os.path.join(path, lastpic))):
+	    if not (glob.glob(os.path.join(basepath, firstpic)) or glob.glob(os.path.join(basepath, lastpic))):
                 p = Popen(['igv_plotter', '-o', cell+"_", '-L', file, '-v', '--max-panel-height', '1000', '--igv-jar-path', '/home/ubuntu/IGV_2.4.10/igv.jar', '-m', '6G', '-g', 'hg19', os.path.join(path, cell + igv)])
                 procs.append(p)
     for pp in procs:
@@ -123,7 +123,7 @@ for i in xrange(0, len(worklist), batchsize):
             path = os.path.splitext(file)[0]
             basename = os.path.basename(path)
             outfile1 = basename + "_mod.png"
-            if not os.path.isfile(os.path.join(path,outfile1)):
+            if not os.path.isfile(os.path.join(basepath,outfile1)):
                 img = Image.open(file)
                 pixelMap = img.load()
                 img2 = Image.new(img.mode, img.size)
