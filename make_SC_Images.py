@@ -149,3 +149,4 @@ for i in xrange(0, len(worklist), batchsize):
 s3_response3 = cci.upload_raw_array(subject+'/'+cell+'/'+cell+'_IDs.npy', np.array(cell_ids))
 print s3_response3
 print "Done with Sample: "+cell
+call(['sudo', 'shutdown', '-h', 'now'])
