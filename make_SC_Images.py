@@ -10,9 +10,7 @@ import numpy as np
 from time import time
 from subprocess import (call, Popen, PIPE)
 from itertools import product
-from IPython.display import Image
 from PIL import Image
-from IPython.display import Image as IPImage
 import shutil
 import re
 import xml.etree.ElementTree as ET 
@@ -38,7 +36,7 @@ subject = sys.argv[1]  #subjectid
 cell = sys.argv[2] #input
 ACCESS_KEY = 'AKIAJNNOA6QMT7HXF6GA'
 SECRET_KEY = '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'
-cci = cc.get_interface('salk-logg-bsmn', ACCESS_KEY=ACCESS_KEY, SECRET_KEY=SECRET_KEY, endpoint_url='https://s3-us-west-1.amazonaws.com')
+cci = cc.get_interface('bsmn-data', ACCESS_KEY=ACCESS_KEY, SECRET_KEY=SECRET_KEY, endpoint_url='https://s3-us-west-2.amazonaws.com')
 print cell
 
 
