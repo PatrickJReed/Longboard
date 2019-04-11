@@ -108,9 +108,9 @@ for i in xrange(0, len(worklist), batchsize):
         with open(os.path.join(path, file)) as f0:
             first = f0.readline()# Read the first line.
             for last in f0: pass
-            firstpic = cell+"_"+"*"+first.strip().split(':')[0]+"_"+first.strip().split(':')[1].split('-')[0]+"_"+first.strip().split(':')[1].split('-')[1]+".png"
-            lastpic = cell+"_"+"*"+last.strip().split(':')[0]+"_"+last.strip().split(':')[1].split('-')[0]+"_"+last.strip().split(':')[1].split('-')[1]+".png"
-            if not (glob.glob(os.path.join(path, firstpic)) or glob.glob(os.path.join(path, lastpic))):
+            firstpic = cell+"-"+"*"+first.strip().split(':')[0]+"_"+first.strip().split(':')[1].split('-')[0]+"_"+first.strip().split(':')[1].split('-')[1]+".png"
+            lastpic = cell+"-"+"*"+last.strip().split(':')[0]+"_"+last.strip().split(':')[1].split('-')[0]+"_"+last.strip().split(':')[1].split('-')[1]+".png"
+	    if not (glob.glob(os.path.join(path, firstpic)) or glob.glob(os.path.join(path, lastpic))):
                 p = Popen(['igv_plotter', '-o', cell+"_", '-L', file, '-v', '--max-panel-height', '1000', '--igv-jar-path', '/home/ubuntu/IGV_2.4.10/igv.jar', '-m', '6G', '-g', 'hg19', os.path.join(path, cell + igv)])
                 procs.append(p)
     for pp in procs:
