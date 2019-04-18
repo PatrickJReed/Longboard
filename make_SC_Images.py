@@ -2,7 +2,6 @@
 from __future__ import division
 import sys
 import glob, os, gc
-import cottoncandy as cc
 import uuid
 import os.path
 import csv
@@ -16,6 +15,13 @@ import re
 import xml.etree.ElementTree as ET
 from boto3.session import Session
 import boto3
+import h5py
+from keras.models import Model
+from keras import optimizers
+from keras.layers import Dense, Flatten
+from keras.applications.inception_v3 import InceptionV3
+from keras.layers import Input 
+from keras import backend as K
 
 ##Path to Data
 basepath = "/home/ubuntu/"
@@ -30,14 +36,11 @@ bed = ".bed"
 coverage15k = ".coverage15k"
 coverage15k_gt100 = ".coverage15kgt100"
 loci = ".loci"
-##IGV Template
 IGV = "/home/ubuntu/longboard/IGV_template.xml"
 subject = sys.argv[1]  #subjectid
 cell = sys.argv[2] #input
 ACCESS_KEY = 'AKIAJNNOA6QMT7HXF6GA'
 SECRET_KEY = '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'
-cci = cc.get_interface('bsmn-data', ACCESS_KEY=ACCESS_KEY, SECRET_KEY=SECRET_KEY, endpoint_url='https://s3-us-west-2.amazonaws.com')
-print cell
 
 
 ##Load Data
@@ -92,12 +95,27 @@ with open(myoutput_loci, 'w') as outfile:
                 	outfile.write("".join(row)+'\n')
 Popen(['split', '-l', '100', '-d', os.path.join(basepath, cell + loci), os.path.join(basepath, cell + ".locisplit")]).wait()
 
+
+input_tensor = Input(shape=(512, 512, 3))
+base_model = InceptionV3(input_tensor=input_tensor, weights='imagenet', include_top=False)
+
+x=base_model.output
+x = Flatten(name='flatten')(x)
+x = Dense(4096, activation='relu', name='fc1')(x)
+x = Dense(4096, activation='relu', name='fc2')(x)
+preds = Dense(512, activation='sigmoid', name='predictions')(x)
+
+feat_extractor = Model(inputs=base_model.input,outputs=preds)
+
+
 print cell
 cell_ids = []
 locifile = os.path.join(basepath, cell + loci)
 worklist = glob.glob("*.locisplit*")
 batchsize = 16
 print len(worklist)
+session = Session(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_KEY)
+s3 = session.resource('s3')
 for i in xrange(0, len(worklist), batchsize):
     batch = worklist[i:i+batchsize]
     print i
@@ -108,9 +126,9 @@ for i in xrange(0, len(worklist), batchsize):
         with open(os.path.join(basepath, file)) as f0:
             first = f0.readline()# Read the first line.
             for last in f0: pass
-            firstpic = cell+"-"+"*"+first.strip().split(':')[0]+"_"+first.strip().split(':')[1].split('-')[0]+"_"+first.strip().split(':')[1].split('-')[1]+".png"
-            lastpic = cell+"-"+"*"+last.strip().split(':')[0]+"_"+last.strip().split(':')[1].split('-')[0]+"_"+last.strip().split(':')[1].split('-')[1]+".png"
-	    if not (glob.glob(os.path.join(basepath, firstpic)) or glob.glob(os.path.join(basepath, lastpic))):
+            firstpic = cell+"_"+"*"+first.strip().split(':')[0]+"_"+first.strip().split(':')[1].split('-')[0]+"_"+first.strip().split(':')[1].split('-')[1]+".png"
+            lastpic = cell+"_"+"*"+last.strip().split(':')[0]+"_"+last.strip().split(':')[1].split('-')[0]+"_"+last.strip().split(':')[1].split('-')[1]+".png"
+            if not (glob.glob(os.path.join(basepath, firstpic)) or glob.glob(os.path.join(basepath, lastpic))):
                 p = Popen(['igv_plotter', '-o', cell+"_", '-L', file, '-v', '--max-panel-height', '1000', '--igv-jar-path', '/home/ubuntu/IGV_2.4.10/igv.jar', '-m', '6G', '-g', 'hg19', os.path.join(basepath, cell + igv)])
                 procs.append(p)
     for pp in procs:
@@ -140,13 +158,19 @@ for i in xrange(0, len(worklist), batchsize):
     y = np.array([np.array(fname).astype(str) for fname in filelist])
     uid = uuid.uuid4()
     cell_ids.append(uid.hex)
-    s3_response1 = cci.upload_raw_array(subject+'/'+cell+'/'+cell+'_'+uid.hex+'_X.npy', x, gzip=True)
-    s3_response2 = cci.upload_raw_array(subject+'/'+cell+'/'+cell+'_'+uid.hex+'_Y.npy', y, gzip=True)
-    print s3_response1
-    print s3_response2
+    print(uid.hex)
+    z = feat_extractor.predict(x, batch_size = 16)
+    hf = h5py.File(cell+'_'+uid.hex+'.h5', 'w')
+    hf.create_dataset('X', data=x)
+    hf.create_dataset('Y', data=y)
+    hf.create_dataset('Z', data=z)
+    hf.close()
+    s3.meta.client.upload_file(os.path.join(basepath,cell+'_'+uid.hex+'.h5'),'bsmn-data',os.path.join(subject, cell, cell+'_'+uid.hex+'.h5'))
     for file in glob.glob("*.png"):
-        os.remove(file)
-s3_response3 = cci.upload_raw_array(subject+'/'+cell+'/'+cell+'_IDs.npy', np.array(cell_ids))
-print s3_response3
+        os.remove(file)    
+    os.remove(os.path.join(basepath,cell+'_'+uid.hex+'.h5'))
+hf = h5py.File(cell+'_IDs.h5', 'w')
+hf.create_dataset('ID', data=cell_ids)
+hf.close()
 print "Done with Sample: "+cell
 call(['sudo', 'shutdown', '-h', 'now'])
