@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/home/ubuntu/miniconda2/bin/python
 from __future__ import division
 import sys
 import glob, os, gc
@@ -114,6 +114,8 @@ locifile = os.path.join(basepath, cell + loci)
 worklist = glob.glob("*.locisplit*")
 batchsize = 16
 print len(worklist)
+session = Session(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_KEY)
+s3 = session.resource('s3')
 for i in xrange(0, len(worklist), batchsize):
     batch = worklist[i:i+batchsize]
     print i
@@ -153,6 +155,7 @@ for i in xrange(0, len(worklist), batchsize):
             	img2.crop((174,130,img.size[0]-22,img.size[1])).resize((512,512)).save(outfile1)
     filelist = glob.glob("*_mod.png")
     x = np.array([np.array(Image.open(fname)) for fname in filelist])
+    x = x / 255
     y = np.array([np.array(fname).astype(str) for fname in filelist])
     uid = uuid.uuid4()
     cell_ids.append(uid.hex)
@@ -170,5 +173,6 @@ for i in xrange(0, len(worklist), batchsize):
 hf = h5py.File(cell+'_IDs.h5', 'w')
 hf.create_dataset('ID', data=cell_ids)
 hf.close()
+s3.meta.client.upload_file(os.path.join(basepath,cell+'_IDs.h5'),'bsmn-data',os.path.join(subject, cell, cell+'_IDs.h5'))
 print "Done with Sample: "+cell
 call(['sudo', 'shutdown', '-h', 'now'])
