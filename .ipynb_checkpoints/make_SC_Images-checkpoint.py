@@ -28,7 +28,7 @@ basepath = "/home/ubuntu/"
 genome_regions = "hs37d5_15K_Windows.bed"
 L1HS_bam = "-L1HS_mapped.bam"
 L1HS_bam_bai = "-L1HS_mapped.bam.bai"
-L1HS = "/home/ubuntu/rmask_L1HS_Correct.bed"
+L1HS = "/home/ubuntu/longboard/rmask_L1HS_Correct.bed"
 bam = "-ready.bam"
 bai = "-ready.bam.bai"
 igv = "-igv.xml"
@@ -66,7 +66,7 @@ p2 = Popen(['samtools', 'index', os.path.join(basepath, cell + L1HS_bam)])
 p2.wait()
 
 myoutput2 = open(os.path.join(basepath, cell + coverage15k), 'w')
-p3 = Popen(['bedtools', 'multicov', '-bams', os.path.join(basepath, cell + bam), '-bed', os.path.join(basepath,genome_regions)], stdout=myoutput2)
+p3 = Popen(['bedtools', 'multicov', '-bams', os.path.join(basepath, cell + L1HS_bam), '-bed', os.path.join(basepath,genome_regions)], stdout=myoutput2)
 p3.wait()
 myoutput2.close()
 
@@ -102,8 +102,7 @@ base_model = InceptionV3(input_tensor=input_tensor, weights='imagenet', include_
 x=base_model.output
 x = Flatten(name='flatten')(x)
 x = Dense(4096, activation='relu', name='fc1')(x)
-x = Dense(4096, activation='relu', name='fc2')(x)
-preds = Dense(512, activation='sigmoid', name='predictions')(x)
+preds = Dense(1024, activation='sigmoid', name='predictions')(x)
 
 feat_extractor = Model(inputs=base_model.input,outputs=preds)
 
