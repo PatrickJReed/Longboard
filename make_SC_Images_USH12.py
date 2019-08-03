@@ -37,12 +37,21 @@ coverage15k = ".coverage15k"
 coverage15k_gt100 = ".coverage15kgt100"
 loci = ".loci"
 IGV = "/home/ubuntu/longboard/IGV_template.xml"
-subject = "USH12" #sys.argv[1]  #subjectid
+subject = "USH12"
 Cells = ["USH12_A1_S177","USH12_A2_S185","USH12_A3_S193","USH12_A4_S200","USH12_A5_S207","USH12_A6_S214","USH12_A7_S284","USH12_A8_S292","USH12_B1_S178","USH12_B2_S186","USH12_B3_S194","USH12_B4_S201","USH12_B5_S208","USH12_B6_S215","USH12_B7_S285","USH12_C1_S179","USH12_C2_S187","USH12_C3_S195","USH12_C4_S202","USH12_C5_S209","USH12_C6_S216","USH12_C7_S286","USH12_C8_S293","USH12_D1_S180","USH12_D2_S188","USH12_D3_S196","USH12_D4_S203","USH12_D5_S210","USH12_D6_S217","USH12_D7_S287","USH12_D8_S294","USH12_E1_S181","USH12_E2_S189","USH12_E3_S197","USH12_E4_S204","USH12_E5_S211","USH12_E6_S218","USH12_E7_S288","USH12_E8_S295","USH12_F1_S182","USH12_F2_S190","USH12_F3_S198","USH12_F4_S205","USH12_F5_S212","USH12_F6_S219","USH12_F7_S289","USH12_F8_S296","USH12_G1_S183","USH12_G2_S191","USH12_G3_S199","USH12_G4_S206","USH12_G6_S220","USH12_G7_S290","USH12_G8_S297","USH12_H1_S184","USH12_H2_S192","USH12_H5_S213","USH12_H6_S221","USH12_H7_S291","USH12_H8_S298"]
 #cell = sys.argv[2] #input
 ACCESS_KEY = 'AKIAJNNOA6QMT7HXF6GA'
 SECRET_KEY = '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'
 
+input_tensor = Input(shape=(512, 512, 3))
+base_model = InceptionV3(input_tensor=input_tensor, weights='imagenet', include_top=False)
+
+x=base_model.output
+x = Flatten(name='flatten')(x)
+x = Dense(4096, activation='relu', name='fc1')(x)
+preds = Dense(1024, activation='sigmoid', name='predictions')(x)
+
+feat_extractor = Model(inputs=base_model.input,outputs=preds)
 
 for cell in Cells:
     ##Load Data
@@ -97,15 +106,7 @@ for cell in Cells:
     Popen(['split', '-l', '100', '-d', os.path.join(basepath, cell + loci), os.path.join(basepath, cell + ".locisplit")]).wait()
 
 
-    input_tensor = Input(shape=(512, 512, 3))
-    base_model = InceptionV3(input_tensor=input_tensor, weights='imagenet', include_top=False)
 
-    x=base_model.output
-    x = Flatten(name='flatten')(x)
-    x = Dense(4096, activation='relu', name='fc1')(x)
-    preds = Dense(1024, activation='sigmoid', name='predictions')(x)
-
-    feat_extractor = Model(inputs=base_model.input,outputs=preds)
 
 
     print cell

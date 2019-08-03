@@ -106,15 +106,6 @@ for cell in Cells:
     Popen(['split', '-l', '100', '-d', os.path.join(basepath, cell + loci), os.path.join(basepath, cell + ".locisplit")]).wait()
 
 
-#    input_tensor = Input(shape=(512, 512, 3))
-#    base_model = InceptionV3(input_tensor=input_tensor, weights='imagenet', include_top=False)
-
-#    x=base_model.output
-#    x = Flatten(name='flatten')(x)
-#    x = Dense(4096, activation='relu', name='fc1')(x)
-#    preds = Dense(1024, activation='sigmoid', name='predictions')(x)
-
-#    feat_extractor = Model(inputs=base_model.input,outputs=preds)
 
 
     print cell

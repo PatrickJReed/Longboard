@@ -43,6 +43,16 @@ Cells = ["USD41_A1_S258","USD41_A2_S266","USD41_A3_S274","USD41_A4_S282","USD41_
 ACCESS_KEY = 'AKIAJNNOA6QMT7HXF6GA'
 SECRET_KEY = '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'
 
+input_tensor = Input(shape=(512, 512, 3))
+base_model = InceptionV3(input_tensor=input_tensor, weights='imagenet', include_top=False)
+
+x=base_model.output
+x = Flatten(name='flatten')(x)
+x = Dense(4096, activation='relu', name='fc1')(x)
+preds = Dense(1024, activation='sigmoid', name='predictions')(x)
+
+feat_extractor = Model(inputs=base_model.input,outputs=preds)
+
 
 for cell in Cells:
     ##Load Data
@@ -97,15 +107,6 @@ for cell in Cells:
     Popen(['split', '-l', '100', '-d', os.path.join(basepath, cell + loci), os.path.join(basepath, cell + ".locisplit")]).wait()
 
 
-    input_tensor = Input(shape=(512, 512, 3))
-    base_model = InceptionV3(input_tensor=input_tensor, weights='imagenet', include_top=False)
-
-    x=base_model.output
-    x = Flatten(name='flatten')(x)
-    x = Dense(4096, activation='relu', name='fc1')(x)
-    preds = Dense(1024, activation='sigmoid', name='predictions')(x)
-
-    feat_extractor = Model(inputs=base_model.input,outputs=preds)
 
 
     print cell
