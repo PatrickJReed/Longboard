@@ -16,9 +16,11 @@ import pickle
 from boto3.session import Session
 import boto3
 import h5py
-from MulticoreTSNE import MulticoreTSNE as TSNE
 import umap
 import hdbscan
+from keras.models import load_model
+from keras.models import Model
+from keras import backend as K
 
 
 ##Path to Data
@@ -34,6 +36,9 @@ Cells = ["USD22_A1_S118","USD22_A2_S126","USD22_A3_S134","USD22_A4_S142","USD22_
 
 session = Session(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_KEY)
 s3 = session.resource('s3') 
+s3.meta.client.download_file('bsmn-data',os.path.join('feat_extractor.h5'),os.path.join(basepath,'feat_extractor.h5'))
+feat_extractor = load_model(os.path.join(basepath,'feat_extractor.h5'))
+
 count = 0
 for cell in Cells:
     print(cell)
@@ -47,16 +52,20 @@ for cell in Cells:
         xyz = h5py.File(os.path.join(basepath,cell+'_'+cid+'.h5'), 'r')
         os.remove(os.path.join(basepath,cell+'_'+cid+'.h5'))
         if count == 0:
+            X = xyz['X']
             Y = xyz['Y']
-            Z = xyz['Z']
+            Z = feat_extractor.predict(X, batch_size = 16)
             count+=1
             length = len(Y)
             U = [cid] * length
         else:
+            X = xyz['X']
             Y = np.append(Y,xyz['Y'], axis=0)
-            Z = np.append(Z,xyz['Z'], axis=0)
+            z = feat_extractor.predict(X, batch_size = 16)
+            Z = np.append(Z,z, axis=0)
             length = len(xyz['Y'])
             U = U + ([cid] * length)
+            print Z.shape
 
 hf = h5py.File(subject+'.h5', 'w')
 hf.create_dataset('Y', data=Y)
