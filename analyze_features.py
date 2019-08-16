@@ -29,8 +29,7 @@ SECRET_KEY = 'h8H+hujhi0oH2BpvWERUDrve76cy4VsLuAWau+B6'
 CompleteOverlap = "/home/ubuntu/longboard/hs37d5_15K_Windows_CompleteFinal.txt"
 AnyOverlap = "/home/ubuntu/longboard/hs37d5_15K_Windows_AnyFinal.txt"
 
-Training = ["USD22", "USD01", "USD11","USD25","USD30","USD37", "USH12"]
-Testing = ["USD3","USH11","USD41"]
+Training = ["USD22", "USD01", "USD11","USD25","USD30","USD37", "USH12","USD3","USH11","USD41"]
 
 session = Session(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_KEY)
 s3 = session.resource('s3') 
@@ -55,26 +54,7 @@ for subject in Training:
             T_tmp, Labs_tmp = pickle.load(f)
         Train_Labs = np.append(Train_Labs,Labs_tmp, axis=0)
 
-count = 0
-for subject in Testing:
-    print(subject)
-    s3.meta.client.download_file('bsmn-data',os.path.join(subject, subject+'.h5'),os.path.join(basepath,subject+'.h5'))
-    s3.meta.client.download_file('bsmn-data',os.path.join(subject, subject+'.pkl'),os.path.join(basepath,subject+'.pkl'))
-    hf = h5py.File(os.path.join(basepath,subject+'.h5'), 'r')
-    if count == 0:
-        Test_Y = hf['Y']
-        Test_Z = hf['Z']
-        Test_U = hf['U']
-        with open(os.path.join(basepath,subject+'.pkl'), 'rb') as f:
-            Test_T, Test_Labs = pickle.load(f)
-        count+=1
-    else:
-        Test_Y = np.append(Test_Y,hf['Y'], axis=0)
-        Test_Z = np.append(Test_Z,hf['Z'], axis=0)
-        Test_U = np.append(Test_U,hf['U'], axis=0)
-        with open(os.path.join(basepath,subject+'.pkl'), 'rb') as f:
-            T_tmp, Labs_tmp = pickle.load(f)
-        Test_Labs = np.append(Test_Labs,Labs_tmp, axis=0)        
+        
 
 Train_d = dict([(y,x+1) for x,y in enumerate(sorted(set(Train_Labs[:,0])))])
 Train_C = [Train_d[x] for x in Train_Labs[:,0]]        
