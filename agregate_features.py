@@ -29,30 +29,31 @@ SECRET_KEY = 'h8H+hujhi0oH2BpvWERUDrve76cy4VsLuAWau+B6'
 CompleteOverlap = "/home/ubuntu/longboard/hs37d5_15K_Windows_CompleteFinal.txt"
 AnyOverlap = "/home/ubuntu/longboard/hs37d5_15K_Windows_AnyFinal.txt"
 
+Training = ["USD22", "USD01", "USD11","USD25","USD30","USD37", "USH12","USD3","USH11","USD41"]
 
 session = Session(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_KEY)
 s3 = session.resource('s3') 
+count = 0
+for subject in Training:
+    print(subject)
+    s3.meta.client.download_file('bsmn-data',os.path.join(subject, subject+'.h5'),os.path.join(basepath,subject+'.h5'))
+    hf = h5py.File(os.path.join(basepath,subject+'.h5'), 'r')
+    if count == 0:
+        Train_Y = hf['Y']
+        Train_Z = hf['Z']
+        Train_U = hf['U']
+        count+=1
+    else:
+        Train_Y = np.append(Train_Y,hf['Y'], axis=0)
+        Train_Z = np.append(Train_Z,hf['Z'], axis=0)
+        Train_U = np.append(Train_U,hf['U'], axis=0)
 
-s3.meta.client.download_file('bsmn-data',os.path.join('Training_All_New.h5'),os.path.join('Training_All_New.h5'))
-hf = h5py.File(os.path.join('Training_All_New.h5'), 'r')
-Train_Z = hf['Z'][()] 
-Train_C = hf['C'][()]
-Train_Y = hf['Y'][()]
-Train_U = hf['U'][()]
-
-Train_embedding_partialsupervised = umap.UMAP(n_neighbors=25, n_components=2, min_dist=0.0).fit_transform(Train_Z, y=Train_C)
-
-Train_labels = hdbscan.HDBSCAN(min_samples=13,min_cluster_size=5000).fit_predict(Train_embedding_partialsupervised)
-
-hf = h5py.File('Training_All_Final.h5', 'w')
+hf = h5py.File('Training_All.h5', 'w')
 hf.create_dataset('Y', data=Train_Y)
 hf.create_dataset('Z', data=Train_Z)
 hf.create_dataset('U', data=Train_U)
-hf.create_dataset('C', data=Train_C)
-hf.create_dataset('Umap_Partial', data=Train_embedding_partialsupervised)
-hf.create_dataset('HDB', data=Train_labels)
 hf.close()                
 
-s3.meta.client.upload_file(os.path.join('Training_All_Final.h5'),'bsmn-data',os.path.join('Training_All_Final.h5'))
+s3.meta.client.upload_file(os.path.join('Training_All.h5'),'bsmn-data',os.path.join('Training_All.h5'))
 
 call(['sudo', 'shutdown', '-h', 'now'])

@@ -36,14 +36,16 @@ until finished
 
 End with an example of getting some data out of the system or using it for a little demo
 
-## Running the tests
 
-Explain how to run the automated tests for this system
+### Usage
 
-### Break down into end to end tests
-
-Explain what these tests test and why
-
+make_SC_Images.py
+extract_Features.py
+agregate_Features.py
+analyze_features-8Class.ipynb
+analyze_features_All.py
+analyze_features_Post_UMAP.ipynb
+longboard_train_model.ipynb
 ```
 Give an example
 ```
