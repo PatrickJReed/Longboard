@@ -67,8 +67,8 @@ base_model = InceptionV3(input_shape=input_shape, weights=None, include_top=Fals
 
 x = base_model.output
 x = GlobalAveragePooling2D()(x)
-x = Dense(1024, activation="relu")(x)
-#x = Dropout(.2)(x)
+x = Dense(512, activation="relu")(x)
+x = Dropout(.5)(x)
 predictions = Dense(4, activation='softmax')(x)
 
 # this is the model we will train
@@ -77,10 +77,6 @@ logs_base_dir = "./logs"
 checkpoint = ModelCheckpoint("Longboard_model.h5", monitor='loss', verbose=1, save_best_only=True, save_weights_only=False, mode='auto', period=1)
 early = EarlyStopping(monitor='loss', patience=10, verbose=1, mode='auto')
 csv_logger = CSVLogger('training_longboard.log', append=True, separator=';')
-#tensorboard = TensorBoard(log_dir=logs_base_dir, histogram_freq=0,
-                          #write_graph=True, write_images=False)
-#%load_ext tensorboard
-#%tensorboard --logdir {logs_base_dir}
 
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['acc'])
 
