@@ -81,8 +81,7 @@ csv_logger = CSVLogger('training_longboard.log', append=True, separator=';')
                           #write_graph=True, write_images=False)
 #%load_ext tensorboard
 #%tensorboard --logdir {logs_base_dir}
-for layer in base_model.layers:
-    layer.trainable = False
+
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['acc'])
 
 from sklearn.utils.class_weight import compute_class_weight
