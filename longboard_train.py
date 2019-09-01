@@ -40,45 +40,53 @@ from boto3.session import Session
 import boto3
 import h5py
 
-
-##Path to Data
 basepath = "/home/ubuntu/"
-ACCESS_KEY = 'AKIAJNNOA6QMT7HXF6GA'
-SECRET_KEY = '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'
-session = Session(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_KEY)
-s3 = session.resource('s3')
-
-img_width, img_height = 512,512
-nb_epochs = 500
+epochs = 500
 batch_size = 64
+# dimensions of our images.
+img_width, img_height = 512, 512
 
-K.get_session().run(tf.global_variables_initializer())
-#TRAIN inception model on SLAV
-data_generator = ImageDataGenerator(rescale=1./255, validation_split=0.33)
+data_generator = ImageDataGenerator(rescale=1./255, validation_split=0.3)
 train_generator = data_generator.flow_from_directory(os.path.join(basepath,"Images"), shuffle=True, seed=13, class_mode='categorical', batch_size=batch_size, subset="training", target_size=(img_width, img_height))
 validation_generator = data_generator.flow_from_directory(os.path.join(basepath,"Images"), shuffle=True, seed=13, class_mode='categorical', batch_size=batch_size, subset="validation", target_size=(img_width, img_height))
+
 
 if K.image_data_format() == 'channels_first':
     input_shape = (3, img_width, img_height)
 else:
     input_shape = (img_width, img_height, 3)
 
-base_model = InceptionV3(input_shape=input_shape, weights=None, include_top=False)
+model = Sequential()
+model.add(Conv2D(32, (3, 3), input_shape=input_shape))
+model.add(Activation('relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
 
-x = base_model.output
-x = GlobalAveragePooling2D()(x)
-x = Dense(512, activation="relu")(x)
-x = Dropout(.5)(x)
-predictions = Dense(4, activation='softmax')(x)
+model.add(Conv2D(32, (3, 3)))
+model.add(Activation('relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
 
-# this is the model we will train
-model = Model(inputs=base_model.input, outputs=predictions)
+model.add(Conv2D(64, (3, 3)))
+model.add(Activation('relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+
+model.add(Flatten())
+model.add(Dense(64))
+model.add(Activation('relu'))
+model.add(Dropout(0.2))
+model.add(Dense(64))
+model.add(Activation('relu'))
+model.add(Dropout(0.5))
+model.add(Dense(4))
+model.add(Activation('softmax'))
+
 logs_base_dir = "./logs"
-checkpoint = ModelCheckpoint("Longboard_model.h5", monitor='loss', verbose=1, save_best_only=True, save_weights_only=False, mode='auto', period=1)
-early = EarlyStopping(monitor='loss', patience=10, verbose=1, mode='auto')
-csv_logger = CSVLogger('training_longboard.log', append=True, separator=';')
+checkpoint = ModelCheckpoint("LongBoard_Train_AllImages.h5", monitor='loss', verbose=1, save_best_only=True, save_weights_only=False, mode='auto', period=1)
+early = EarlyStopping(monitor='loss', patience=50, verbose=1, mode='auto')
+csv_logger = CSVLogger('LongBoard_Train_AllImages.log', append=True, separator=';')
 
-model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['acc'])
+model.compile(loss='categorical_crossentropy',
+              optimizer='adam',
+              metrics=['accuracy'])
 
 from sklearn.utils.class_weight import compute_class_weight
 
@@ -91,8 +99,10 @@ model.fit_generator(generator=train_generator,
                     steps_per_epoch=STEP_SIZE_TRAIN,
                     validation_data=validation_generator,
                     validation_steps=STEP_SIZE_VALID,
-                    epochs=nb_epochs,
-                    callbacks = [early,checkpoint,csv_logger], 
-                    verbose = 1,
-                    class_weight=class_weight)
-model.save('Longboard_model.h5')
+                    callbacks = [early,checkpoint,csv_logger],
+                    epochs=epochs,
+                    class_weight=class_weight,
+                    verbose = 2)
+
+model.save_weights('LongBoard_Train_AllImages_weights.h5')
+model.save('LongBoard_Train_AllImages.h5')
