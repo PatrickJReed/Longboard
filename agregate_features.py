@@ -29,7 +29,8 @@ SECRET_KEY = 'h8H+hujhi0oH2BpvWERUDrve76cy4VsLuAWau+B6'
 CompleteOverlap = "/home/ubuntu/longboard/hs37d5_15K_Windows_CompleteFinal.txt"
 AnyOverlap = "/home/ubuntu/longboard/hs37d5_15K_Windows_AnyFinal.txt"
 
-Training = ["USD22", "USD01", "USD11","USD25","USD30","USD37", "USH12","USD3","USH11","USD41"]
+#Training = ["USD22", "USD01", "USD11","USD25","USD30","USD37", "USH12","USD3","USH11","USD41"]
+Training = ["USD01", "USD11"]
 
 session = Session(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_KEY)
 s3 = session.resource('s3') 
