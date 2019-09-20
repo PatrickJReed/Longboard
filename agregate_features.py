@@ -1,4 +1,4 @@
-#!/home/ubuntu/miniconda2/bin/python
+#!/usr/local/share/bcbio/anaconda/bin/python
 
 from __future__ import division
 import sys
@@ -21,40 +21,33 @@ import hdbscan
 
 
 ##Path to Data
-basepath = "/home/ubuntu/"
-genome_regions = "longboard/hs37d5_15K_Windows.bed"
-L1HS = "/home/ubuntu/longboard/rmask_L1HS_Correct.bed"
+basepath = "/raidixshare_log-g/longboard/"
 ACCESS_KEY = 'AKIAJNNOA6QMT7HXF6GA'
 SECRET_KEY = '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'
-CompleteOverlap = "/home/ubuntu/longboard/hs37d5_15K_Windows_CompleteFinal.txt"
-AnyOverlap = "/home/ubuntu/longboard/hs37d5_15K_Windows_AnyFinal.txt"
 
-#Training = ["USD22", "USD01", "USD11","USD25","USD30","USD37", "USH12","USD3","USH11","USD41"]
-Training = ["USD01", "USD11"]
+Training = ["USD22","USD01","USD11","USD25","USD30","USD37","USH12","USD3","USH11","USD41"]
+#Training = ["USD01", "USD11"]
 
 session = Session(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_KEY)
 s3 = session.resource('s3') 
 count = 0
 for subject in Training:
     print(subject)
-    s3.meta.client.download_file('bsmn-data',os.path.join(subject, subject+'.h5'),os.path.join(basepath,subject+'.h5'))
-    hf = h5py.File(os.path.join(basepath,subject+'.h5'), 'r')
+    s3.meta.client.download_file('bsmn-data',os.path.join(subject, subject+'_new.h5'),os.path.join(basepath,subject+'_new.h5'))
+    hf = h5py.File(os.path.join(basepath,subject+'_new.h5'), 'r')
     if count == 0:
         Train_Y = hf['Y']
         Train_Z = hf['Z']
-        Train_U = hf['U']
         count+=1
     else:
         Train_Y = np.append(Train_Y,hf['Y'], axis=0)
         Train_Z = np.append(Train_Z,hf['Z'], axis=0)
-        Train_U = np.append(Train_U,hf['U'], axis=0)
 
-hf = h5py.File('Training_All.h5', 'w')
+hf = h5py.File('Training_All_new.h5', 'w')
 hf.create_dataset('Y', data=Train_Y)
 hf.create_dataset('Z', data=Train_Z)
-hf.create_dataset('U', data=Train_U)
 hf.close()                
 
-s3.meta.client.upload_file(os.path.join('Training_All.h5'),'bsmn-data',os.path.join('Training_All.h5'))
+s3.meta.client.upload_file(os.path.join('Training_All_new.h5'),'bsmn-data',os.path.join('Training_All_new.h5'))
 
-call(['sudo', 'shutdown', '-h', 'now'])
+#call(['sudo', 'shutdown', '-h', 'now'])
