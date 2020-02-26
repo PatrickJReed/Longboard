@@ -55,7 +55,7 @@ End with an example of getting some data out of the system or using it for a lit
 
 ## Authors
 
-* **Patrick J Reed** - *Complete* -
+* **Patrick J Reed**
 
 See also the list of [contributors](https://github.com/PatrickJReed/Longboard/contributors) who participated in this project.
 
