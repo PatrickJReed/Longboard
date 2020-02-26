@@ -1,7 +1,5 @@
 # Longboard
 
-<img src="https://surferart.com/wp-content/uploads/2013/05/Longboard-5.jpg" align="right"
-     title="longboard" width="256" height="195">
 Fun in the sun
 
 Longboard is an scalable, cloud based deep learning pipeline for the detection of somatic LINE-1 retrotransposition events from SLAV-Seq datasets.  Longboard takes SLAV-Seq bam file(s) aligned to Hs37d5 as input and returns a vcf formated file of predicted somatic insertions. 
@@ -17,6 +15,8 @@ These instructions will let you deploy Longboard on AWS.
 Longboard has been developed to work entirely on AWS and has not been tested on any other system. 
 
 1: AWS access (EC2 & S3)
+
+2: Bam files(s) aligned to Hs37d5 representing SLAV-Seq libraries
 
 
 ### Installing
