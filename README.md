@@ -19,9 +19,21 @@ Give examples
 
 ### Installing
 
-1: Launch AWS isntance using Longboard AMI (link).  Instance size depends on scale of data to be processed. Minimum metrics are (), show plot of run time vs instance type.
+1: Launch AWS isntance using Longboard AMI (ami-0dc5f293477ab4af9).
 
-2:  Clone Longboard Repo from github (link)
+https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html
+
+Instance size depends on scale of data to be processed. Minimum metrics are (), show plot of run time vs instance type.
+
+2:  Clone Longboard Repo from github.
+
+```
+git clone https://github.com/PatrickJReed/Longboard.git
+```
+
+Done.
+
+### Usage
 
 3: Run make_images.py (path to bam in s3)
 
@@ -31,16 +43,8 @@ Output looks like:
 
 End with an example of getting some data out of the system or using it for a little demo
 
+Done.
 
-### Usage
-
-make_SC_Images.py
-extract_Features.py
-agregate_Features.py
-analyze_features-8Class.ipynb
-analyze_features_All.py
-analyze_features_Post_UMAP.ipynb
-longboard_train_model.ipynb
 ```
 Give an example
 ```
