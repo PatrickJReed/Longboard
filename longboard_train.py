@@ -41,8 +41,8 @@ import boto3
 import h5py
 
 basepath = "/home/ubuntu/"
-epochs = 500
-batch_size = 64
+epochs = 50
+batch_size = 24
 # dimensions of our images.
 img_width, img_height = 512, 512
 
@@ -57,32 +57,40 @@ else:
     input_shape = (img_width, img_height, 3)
 
 model = Sequential()
-model.add(Conv2D(32, (3, 3), input_shape=input_shape))
+model.add(Conv2D(32, (6, 6), input_shape=input_shape, padding='same', use_bias=False))
+model.add(BatchNormalization())
 model.add(Activation('relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(MaxPooling2D(pool_size=(3, 3)))
 
-model.add(Conv2D(32, (3, 3)))
+model.add(Conv2D(32, (6, 6), use_bias=False, padding='same'))
+model.add(BatchNormalization())
 model.add(Activation('relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(MaxPooling2D(pool_size=(3, 3)))
 
-model.add(Conv2D(64, (3, 3)))
+model.add(Conv2D(64, (3, 3), use_bias=False, padding='same'))
+model.add(BatchNormalization())
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 
 model.add(Flatten())
-model.add(Dense(64))
+
+model.add(Dense(64, use_bias=False))
+model.add(BatchNormalization())
 model.add(Activation('relu'))
 model.add(Dropout(0.2))
-model.add(Dense(64))
+
+model.add(Dense(64, use_bias=False))
+model.add(BatchNormalization())
 model.add(Activation('relu'))
-model.add(Dropout(0.5))
+model.add(Dropout(0.2))
+
 model.add(Dense(4))
 model.add(Activation('softmax'))
 
 logs_base_dir = "./logs"
-checkpoint = ModelCheckpoint("LongBoard_Train_AllImages.h5", monitor='loss', verbose=1, save_best_only=True, save_weights_only=False, mode='auto', period=1)
+checkpoint = ModelCheckpoint("LongBoard_Train_AllImages_BN.h5", monitor='loss', verbose=1, save_best_only=True, save_weights_only=False, mode='auto', period=1)
 early = EarlyStopping(monitor='loss', patience=50, verbose=1, mode='auto')
-csv_logger = CSVLogger('LongBoard_Train_AllImages.log', append=True, separator=';')
+csv_logger = CSVLogger('LongBoard_Train_AllImages_BN.log', append=True, separator=';')
 
 model.compile(loss='categorical_crossentropy',
               optimizer='adam',
@@ -102,7 +110,7 @@ model.fit_generator(generator=train_generator,
                     callbacks = [early,checkpoint,csv_logger],
                     epochs=epochs,
                     class_weight=class_weight,
-                    verbose = 2)
+                    verbose = 1)
 
-model.save_weights('LongBoard_Train_AllImages_weights.h5')
-model.save('LongBoard_Train_AllImages.h5')
+model.save_weights('LongBoard_Train_AllImages_weights_BN.h5')
+model.save('LongBoard_Train_AllImages_BN.h5')
