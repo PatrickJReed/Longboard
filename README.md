@@ -1,93 +1,68 @@
-# longboard
+# Longboard
 
-<img src="https://surferart.com/wp-content/uploads/2013/05/Longboard-5.jpg" align="right"
-     title="longboard" width="256" height="195">
 Fun in the sun
 
-longboard is an scalable, cloud based deep learning pipeline for the detection of somatic LINE-1 retrotransposition events from SLAV-Seq datasets.
+Longboard is an scalable, cloud based deep learning pipeline for the detection of somatic LINE-1 retrotransposition events from SLAV-Seq datasets.  Longboard takes SLAV-Seq bam file(s) aligned to Hs37d5 as input and returns a vcf formated file of predicted somatic insertions. 
+
+https://www.nature.com/articles/nn.4388
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+These instructions will let you deploy Longboard on AWS.
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+Longboard has been developed to work entirely on AWS and has not been tested on any other system. 
 
-```
-Give examples
-```
+1: AWS access (EC2 & S3)
+
+2: Bam files(s) aligned to Hs37d5 representing SLAV-Seq libraries
+
 
 ### Installing
 
-A step by step series of examples that tell you how to get a development env running
-
-Say what the step will be
+1: Launch AWS isntance using Longboard AMI: ami-0dc5f293477ab4af9
 
 ```
-Give the example
+aws ec2 run-instances \
+    --image-id ami-0dc5f293477ab4af9 \
+    --count 1 \
+    --instance-type **
+```
+** Instance size depends on scale of data to be processed. Minimum metrics are (), show plot of run time vs instance type.
+
+2:  Clone Longboard Repo from github.
+
+```
+git clone https://github.com/PatrickJReed/Longboard.git
 ```
 
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
-
+Done.
 
 ### Usage
 
-make_SC_Images.py
-extract_Features.py
-agregate_Features.py
-analyze_features-8Class.ipynb
-analyze_features_All.py
-analyze_features_Post_UMAP.ipynb
-longboard_train_model.ipynb
-```
-Give an example
-```
+1: Load bam files(s) to S3
 
-### And coding style tests
+3: Run make_images.py (path to bam in s3)
 
-Explain what these tests test and why
+4: Run get_predicitons.py (path to bam in s3)
+
+Done.
 
 ```
-Give an example
+End with an example of getting some data out of the system or using it for a little demo
 ```
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
-
-## Built With
-
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
 
 ## Authors
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
+* **Patrick J Reed**
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/PatrickJReed/Longboard/contributors) who participated in this project.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
 
 ## Acknowledgments
 
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
+* This work was inspired by Deep Variant https://github.com/google/deepvariant
