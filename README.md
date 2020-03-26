@@ -1,7 +1,5 @@
 # Longboard
 
-Fun in the sun
-
 Longboard is an scalable, cloud based deep learning pipeline for the detection of somatic LINE-1 retrotransposition events from SLAV-Seq datasets.  Longboard takes SLAV-Seq bam file(s) aligned to Hs37d5 as input and returns a vcf formated file of predicted somatic insertions. 
 
 https://www.nature.com/articles/nn.4388
