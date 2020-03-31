@@ -1,4 +1,4 @@
-#!/usr/local/share/bcbio/anaconda/bin/python
+#!/home/ubuntu/miniconda2/bin/python
 
 from __future__ import division
 import sys
@@ -21,11 +21,11 @@ import hdbscan
 
 
 ##Path to Data
-basepath = "/raidixshare_log-g/longboard/"
+basepath = "/home/ubuntu/"
 ACCESS_KEY = 'AKIAJNNOA6QMT7HXF6GA'
 SECRET_KEY = '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'
 
-Training = ["USD22","USD01","USD11","USD25","USD30","USD37","USH12","USD3","USH11","USD41"]
+Training = ["USD37"]#,"USD01","USD11","USD25","USD30","USD37","USH12","USD3","USH11","USD41"]
 #Training = ["USD01", "USD11"]
 
 session = Session(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_KEY)
@@ -50,4 +50,4 @@ hf.close()
 
 s3.meta.client.upload_file(os.path.join('Training_All_new.h5'),'bsmn-data',os.path.join('Training_All_new.h5'))
 
-call(['sudo', 'shutdown', '-h', 'now'])
+#call(['sudo', 'shutdown', '-h', 'now'])

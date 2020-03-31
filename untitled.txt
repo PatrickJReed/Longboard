@@ -16,6 +16,3 @@ Script order predicitons
 makeImages.py
 
 makePredictions.py
-
-
- USD15, USD14, USD05, USD21, USD09
