@@ -1,4 +1,4 @@
-#!/home/ubuntu/miniconda2/bin/python
+d#!/home/ubuntu/miniconda2/bin/python
 
 from __future__ import print_function
 import glob, os, gc, sys

@@ -68,6 +68,7 @@ for cell in Cells:
 hf = h5py.File(subject+'_new.h5', 'w')
 hf.create_dataset('Y', data=Y)
 hf.create_dataset('Z', data=Z)
+#hf.create_dataset('U', data=U)
 hf.close()
 
 session = Session(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_KEY)

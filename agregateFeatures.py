@@ -38,14 +38,17 @@ for subject in Training:
     if count == 0:
         Train_Y = hf['Y']
         Train_Z = hf['Z']
+#        Train_U = hf['U']
         count+=1
     else:
         Train_Y = np.append(Train_Y,hf['Y'], axis=0)
         Train_Z = np.append(Train_Z,hf['Z'], axis=0)
+#        Train_U = np.append(Train_U,hf['U'], axis=0)
 
 hf = h5py.File('Training_All_new.h5', 'w')
 hf.create_dataset('Y', data=Train_Y)
 hf.create_dataset('Z', data=Train_Z)
+#hf.create_dataset('U', data=Train_U)
 hf.close()                
 
 s3.meta.client.upload_file(os.path.join('Training_All_new.h5'),'bsmn-data',os.path.join('Training_All_new.h5'))
