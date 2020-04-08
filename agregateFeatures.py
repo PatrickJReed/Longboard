@@ -33,8 +33,8 @@ s3 = session.resource('s3')
 count = 0
 for subject in Training:
     print(subject)
-    s3.meta.client.download_file('bsmn-data',os.path.join(subject, subject+'_new.h5'),os.path.join(basepath,subject+'_new.h5'))
-    hf = h5py.File(os.path.join(basepath,subject+'_new.h5'), 'r')
+    s3.meta.client.download_file('bsmn-data',os.path.join(subject, subject+'_V2.h5'),os.path.join(basepath,subject+'_V2.h5'))
+    hf = h5py.File(os.path.join(basepath,subject+'_V2.h5'), 'r')
     if count == 0:
         Train_Y = hf['Y']
         Train_Z = hf['Z']
@@ -45,12 +45,12 @@ for subject in Training:
         Train_Z = np.append(Train_Z,hf['Z'], axis=0)
 #        Train_U = np.append(Train_U,hf['U'], axis=0)
 
-hf = h5py.File('Training_All_new.h5', 'w')
+hf = h5py.File('Training_All_Test.h5', 'w')
 hf.create_dataset('Y', data=Train_Y)
 hf.create_dataset('Z', data=Train_Z)
 #hf.create_dataset('U', data=Train_U)
 hf.close()                
 
-s3.meta.client.upload_file(os.path.join('Training_All_new.h5'),'bsmn-data',os.path.join('Training_All_new.h5'))
+s3.meta.client.upload_file(os.path.join('Training_All_Test.h5'),'bsmn-data',os.path.join('Training_All_Test.h5'))
 
 #call(['sudo', 'shutdown', '-h', 'now'])

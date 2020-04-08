@@ -6,6 +6,12 @@ extractFeatures.py
 
 agregateFeatures.py
 
+analyzeFeatures.py
+
+longboard train
+
+longboard predict
+
 define subtypes
 
 train model

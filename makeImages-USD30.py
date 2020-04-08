@@ -22,7 +22,8 @@ basepath = "/home/ubuntu/"
 genome_regions = "hs37d5_15K_Windows.bed"
 L1HS_bam = "-L1HS_mapped.bam"
 L1HS_bam_bai = "-L1HS_mapped.bam.bai"
-L1HS = "/home/ubuntu/longboard/rmask_L1HS_Correct.bed"
+L1HS = "/home/ubuntu/Longboard/rmask_L1HS_Correct.bed"
+gDNA = "gDNA_usd30"
 bam = "-ready.bam"
 bai = "-ready.bam.bai"
 igv = "-igv.xml"
@@ -30,24 +31,41 @@ bed = ".bed"
 coverage15k = ".coverage15k"
 coverage15k_gt100 = ".coverage15kgt100"
 loci = ".loci"
-IGV = "/home/ubuntu/longboard/IGV_template.xml"
-subject = sys.argv[1]  #subjectid
-Cells = sys.argv[2] #input
-ACCESS_KEY = sys.argv[3] #'AKIAJNNOA6QMT7HXF6GA'
-SECRET_KEY = sys.argv[4] #'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'
+IGV = "/home/ubuntu/Longboard/IGV_template.xml"
+subject = "USD30" #sys.argv[1]  #subjectid
+Cells = [] #sys.argv[2] #input
 
+ACCESS_KEY = 'AKIAJNNOA6QMT7HXF6GA'
+SECRET_KEY = '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'
 
+ ##Load Data
+#session = Session(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_KEY)
+#s3 = session.resource('s3')
+#your_bucket = s3.Bucket('longboard-sc')
+#for s3_file in your_bucket.objects.all():
+#    s3 = boto3.client ('s3')
+#    s3.download_file('longboard-sc',s3_file.key,os.path.join(basepath,s3_file.key))
+#Bulk Bam SLAV-Seq/BulkSamples/gDNA_usd37-ready.bam
+#s3.download_file('for-ndar',os.path.join("/SLAV-Seq/BulkSamples", gDNA + bam),os.path.join(basepath,gDNA + bam))
+
+#p0 = Popen(['samtools', 'index', os.path.join(basepath,gDNA + bam)])
+#p0.wait()
+
+#myoutput = open(os.path.join(basepath,gDNA + L1HS_bam), 'w')
+#p1 = Popen(['java', '-jar', '/home/ubuntu/jvarkit/dist/samviewwithmate.jar', '-b', L1HS, '--samoutputformat', 'BAM', #os.path.join(basepath,gDNA + bam)], stdout=myoutput)
+#p1.wait()
+#myoutput.close()
+
+#p2 = Popen(['samtools', 'index', os.path.join(basepath,gDNA + L1HS_bam)])
+#p2.wait()
 
 for cell in Cells:
-    ##Load Data
+    print "Starting Sample: "+cell
     session = Session(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_KEY)
     s3 = session.resource('s3')
-    your_bucket = s3.Bucket('longboard-sc')
-    for s3_file in your_bucket.objects.all():
-        s3 = boto3.client ('s3')
-        s3.download_file('longboard-sc',s3_file.key,s3_file.key)
-    #Bam
-    s3.download_file('bsmn-data',os.path.join(subject, cell + bam),os.path.join(basepath,cell + bam))
+    s3 = boto3.client ('s3')
+    print os.path.join("SLAV-Seq/",subject, cell + bam)
+    s3.download_file('for-ndar',os.path.join("SLAV-Seq/",subject, cell + bam),os.path.join(basepath,cell + bam))
 
     p0 = Popen(['samtools', 'index', os.path.join(basepath, cell + bam)])
     p0.wait()
@@ -74,10 +92,10 @@ for cell in Cells:
 
     tree = ET.parse(IGV)
     root = tree.getroot()
-    root[0][0].set('path', os.path.join(basepath, cell + bam)) #sc bam
-    root[0][1].set('path', os.path.join(basepath, cell + L1HS_bam)) #L1HS bam
-    root[1][0].set('id', os.path.join(basepath, cell + bam)) #sc bam
-    root[2][0].set('id', os.path.join(basepath, cell + L1HS_bam)) #L1HS bam
+    root[0][0].set('path', os.path.join(basepath,gDNA + L1HS_bam)) #Bulk L1HS bam
+    root[0][1].set('path', os.path.join(basepath, cell + L1HS_bam)) #sc L1HS bam
+    root[1][0].set('id', os.path.join(basepath,gDNA + L1HS_bam)) #Bulk L1HS bam
+    root[2][0].set('id', os.path.join(basepath, cell + L1HS_bam)) #sc L1HS bam
     tree.write(os.path.join(basepath, cell + igv))
 
     myinput_loci = os.path.join(basepath, cell + coverage15k_gt100)
