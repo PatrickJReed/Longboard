@@ -23,6 +23,7 @@ genome_regions = "hs37d5_15K_Windows.bed"
 L1HS_bam = "-L1HS_mapped.bam"
 L1HS_bam_bai = "-L1HS_mapped.bam.bai"
 L1HS = "/home/ubuntu/Longboard/rmask_L1HS_Correct.bed"
+gDNA = "gDNA_usd19"
 bam = "-ready.bam"
 bai = "-ready.bam.bai"
 igv = "-igv.xml"
@@ -31,32 +32,21 @@ coverage15k = ".coverage15k"
 coverage15k_gt100 = ".coverage15kgt100"
 loci = ".loci"
 IGV = "/home/ubuntu/Longboard/IGV_template.xml"
-subject = sys.argv[1]  #subjectid
-gDNA = sys.argv[2]
+subject = "usd19" #sys.argv[1]  #subjectid
+Cells = ["usd19_A1_S1","usd19_A2_S9","usd19_A3_S13","usd19_A4_S20","usd19_A5_S27","usd19_A6_S35","usd19_A7_S43","usd19_A8_S50","usd19_B1_S2","usd19_B3_S14","usd19_B4_S21","usd19_B5_S28","usd19_B6_S36","usd19_B7_S44","usd19_B8_S51","usd19_C1_S3","usd19_C2_S10","usd19_C3_S15","usd19_C4_S22","usd19_C5_S29","usd19_C6_S37","usd19_C7_S45","usd19_D1_S4","usd19_D4_S23","usd19_D5_S30","usd19_D6_S38","usd19_D7_S46","usd19_E1_S5","usd19_E2_S11","usd19_E3_S16","usd19_E4_S24","usd19_E5_S31","usd19_E6_S39","usd19_E7_S47","usd19_E8_S52","usd19_F1_S6","usd19_F3_S17","usd19_F5_S32","usd19_F6_S40","usd19_F7_S48","usd19_F8_S53","usd19_G1_S7","usd19_G3_S18","usd19_G4_S25","usd19_G5_S33","usd19_G6_S41","usd19_H1_S8","usd19_H2_S12","usd19_H3_S19","usd19_H4_S26","usd19_H5_S34","usd19_H6_S42","usd19_H7_S49","usd19_H8_S54"] #sys.argv[2] #input
 
 ACCESS_KEY = 'AKIAJNNOA6QMT7HXF6GA'
 SECRET_KEY = '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'
 
-##Load Data
+ ##Load Data
 session = Session(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_KEY)
 s3 = session.resource('s3')
 your_bucket = s3.Bucket('longboard-sc')
 for s3_file in your_bucket.objects.all():
     s3 = boto3.client ('s3')
     s3.download_file('longboard-sc',s3_file.key,os.path.join(basepath,s3_file.key))
-
-##Fetch file list
-print os.path.join("/metadata", subject + "_bam.txt")
-print os.path.join(basepath,subject + "_bam.txt")
-s3 = boto3.client ('s3')
-s3.download_file('for-ndar',os.path.join("metadata/", subject + "_bam.txt"),os.path.join(basepath,subject + "_bam.txt"))
-
-with open(subject + "_bam.txt") as f:
-    Cells = [line.rstrip() for line in f]
-
-print Cells
 #Bulk Bam SLAV-Seq/BulkSamples/gDNA_usd37-ready.bam
-s3.download_file('for-ndar',os.path.join("SLAV-Seq/BulkSamples", gDNA + bam),os.path.join(basepath,gDNA + bam))
+s3.download_file('for-ndar',os.path.join("SLAV-Seq/BulkSamples/", gDNA + bam),os.path.join(basepath,gDNA + bam))
 
 p0 = Popen(['samtools', 'index', os.path.join(basepath,gDNA + bam)])
 p0.wait()
@@ -68,8 +58,6 @@ myoutput.close()
 
 p2 = Popen(['samtools', 'index', os.path.join(basepath,gDNA + L1HS_bam)])
 p2.wait()
-
-
 
 for cell in Cells:
     print "Starting Sample: "+cell
@@ -187,4 +175,4 @@ for cell in Cells:
     print "Done with Sample: "+cell
     for file in glob.glob(subject+"*"):
         os.remove(file)    
-call(['sudo', 'shutdown', '-h', 'now'])
+#call(['sudo', 'shutdown', '-h', 'now'])

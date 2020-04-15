@@ -23,6 +23,7 @@ genome_regions = "hs37d5_15K_Windows.bed"
 L1HS_bam = "-L1HS_mapped.bam"
 L1HS_bam_bai = "-L1HS_mapped.bam.bai"
 L1HS = "/home/ubuntu/Longboard/rmask_L1HS_Correct.bed"
+gDNA = "gDNA_ush19"
 bam = "-ready.bam"
 bai = "-ready.bam.bai"
 igv = "-igv.xml"
@@ -31,32 +32,21 @@ coverage15k = ".coverage15k"
 coverage15k_gt100 = ".coverage15kgt100"
 loci = ".loci"
 IGV = "/home/ubuntu/Longboard/IGV_template.xml"
-subject = sys.argv[1]  #subjectid
-gDNA = sys.argv[2]
+subject = "USH19" #sys.argv[1]  #subjectid
+Cells = [] #sys.argv[2] #input
 
 ACCESS_KEY = 'AKIAJNNOA6QMT7HXF6GA'
 SECRET_KEY = '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'
 
-##Load Data
+ ##Load Data
 session = Session(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_KEY)
 s3 = session.resource('s3')
 your_bucket = s3.Bucket('longboard-sc')
 for s3_file in your_bucket.objects.all():
     s3 = boto3.client ('s3')
     s3.download_file('longboard-sc',s3_file.key,os.path.join(basepath,s3_file.key))
-
-##Fetch file list
-print os.path.join("/metadata", subject + "_bam.txt")
-print os.path.join(basepath,subject + "_bam.txt")
-s3 = boto3.client ('s3')
-s3.download_file('for-ndar',os.path.join("metadata/", subject + "_bam.txt"),os.path.join(basepath,subject + "_bam.txt"))
-
-with open(subject + "_bam.txt") as f:
-    Cells = [line.rstrip() for line in f]
-
-print Cells
 #Bulk Bam SLAV-Seq/BulkSamples/gDNA_usd37-ready.bam
-s3.download_file('for-ndar',os.path.join("SLAV-Seq/BulkSamples", gDNA + bam),os.path.join(basepath,gDNA + bam))
+s3.download_file('for-ndar',os.path.join("SLAV-Seq/BulkSamples/", gDNA + bam),os.path.join(basepath,gDNA + bam))
 
 p0 = Popen(['samtools', 'index', os.path.join(basepath,gDNA + bam)])
 p0.wait()
@@ -68,8 +58,6 @@ myoutput.close()
 
 p2 = Popen(['samtools', 'index', os.path.join(basepath,gDNA + L1HS_bam)])
 p2.wait()
-
-
 
 for cell in Cells:
     print "Starting Sample: "+cell
@@ -187,4 +175,4 @@ for cell in Cells:
     print "Done with Sample: "+cell
     for file in glob.glob(subject+"*"):
         os.remove(file)    
-call(['sudo', 'shutdown', '-h', 'now'])
+#call(['sudo', 'shutdown', '-h', 'now'])
