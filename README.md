@@ -41,9 +41,9 @@ Done.
 
 1: Load bam files(s) to S3
 
-3: Run make_images.py (path to bam in s3)
+3: Run makeImages.py [S3 Bucket] [Sample ID] [bulk ID]
 
-4: Run get_predicitons.py (path to bam in s3)
+4: Run getPredicitons.py [S3 Bucket] [Sample ID]
 
 Done.
 
