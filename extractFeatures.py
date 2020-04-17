@@ -82,4 +82,4 @@ s3.meta.client.upload_file(os.path.join(subject+'_ef.h5'),'bsmn-data',os.path.jo
 
 
 
-#call(['sudo', 'shutdown', '-h', 'now'])
+call(['sudo', 'shutdown', '-h', 'now'])
