@@ -46,12 +46,12 @@ for s3_file in your_bucket.objects.all():
     s3.download_file('longboard-sc',s3_file.key,os.path.join(basepath,s3_file.key))
 
 ##Fetch file list
-print os.path.join("/metadata", subject + "_bam.txt")
-print os.path.join(basepath,subject + "_bam.txt")
+print os.path.join("/metadata", subject + ".txt")
+print os.path.join(basepath,subject + ".txt")
 s3 = boto3.client ('s3')
-s3.download_file('for-ndar',os.path.join("metadata/", subject + "_bam.txt"),os.path.join(basepath,subject + "_bam.txt"))
+s3.download_file('for-ndar',os.path.join("metadata/", subject + ".txt"),os.path.join(basepath,subject + ".txt"))
 
-with open(subject + "_bam.txt") as f:
+with open(subject + ".txt") as f:
     Cells = [line.rstrip() for line in f]
 
 print Cells

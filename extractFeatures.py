@@ -32,9 +32,9 @@ subject = sys.argv[1]
 session = Session(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_KEY)
 s3 = session.resource('s3')
 s3 = boto3.client ('s3')
-s3.download_file('for-ndar',os.path.join("metadata/", subject + "_bam.txt"),os.path.join(basepath,subject + "_bam.txt"))
+s3.download_file('for-ndar',os.path.join("metadata/", subject + ".txt"),os.path.join(basepath,subject + ".txt"))
 
-with open(subject + "_bam.txt") as f:
+with open(subject + ".txt") as f:
     Cells = [line.rstrip() for line in f]
 
 session = Session(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_KEY)
