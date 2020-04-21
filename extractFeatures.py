@@ -25,8 +25,7 @@ from keras.utils import multi_gpu_model
 
 ##Path to Data
 basepath = "/home/ubuntu/"
-ACCESS_KEY = 'AKIAJNNOA6QMT7HXF6GA'
-SECRET_KEY = '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'
+
 subject = sys.argv[1]
 
 session = Session(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_KEY)

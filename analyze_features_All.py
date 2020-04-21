@@ -24,8 +24,7 @@ import hdbscan
 basepath = "/home/ubuntu/"
 genome_regions = "longboard/hs37d5_15K_Windows.bed"
 L1HS = "/home/ubuntu/longboard/rmask_L1HS_Correct.bed"
-ACCESS_KEY = 'AKIAJNNOA6QMT7HXF6GA'
-SECRET_KEY = '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'
+
 CompleteOverlap = "/home/ubuntu/longboard/hs37d5_15K_Windows_CompleteFinal.txt"
 AnyOverlap = "/home/ubuntu/longboard/hs37d5_15K_Windows_AnyFinal.txt"
 

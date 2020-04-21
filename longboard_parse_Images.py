@@ -26,8 +26,6 @@ import h5py
 
 ##Path to Data
 basepath = "/home/ubuntu/"
-ACCESS_KEY = 'AKIAJNNOA6QMT7HXF6GA'
-SECRET_KEY = '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'
 session = Session(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_KEY)
 s3 = session.resource('s3')
 Cells_USD22 = ["USD22_F7_S171","USD22_F8_S178","USD22_G1_S124","USD22_G2_S132","USD22_G3_S140","USD22_G4_S148","USD22_G5_S156","USD22_G6_S164","USD22_G7_S172","USD22_G8_S179","USD22_H1_S125","USD22_H2_S133","USD22_H3_S141","USD22_H4_S149","USD22_H5_S157","USD22_H6_S165"]

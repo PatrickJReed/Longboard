@@ -22,8 +22,6 @@ import hdbscan
 
 ##Path to Data
 basepath = "/home/ubuntu/"
-ACCESS_KEY = 'AKIAJNNOA6QMT7HXF6GA'
-SECRET_KEY = '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'
 
 Training = ["USD37","USD01","USD11","USD25","USD30","USH12","USD3","USH11","USD41"]
 

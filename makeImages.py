@@ -34,8 +34,6 @@ IGV = "/home/ubuntu/Longboard/IGV_template.xml"
 subject = sys.argv[1]  #subjectid
 gDNA = sys.argv[2]
 
-ACCESS_KEY = 'AKIAJNNOA6QMT7HXF6GA'
-SECRET_KEY = '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'
 
 ##Load Data
 session = Session(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_KEY)
