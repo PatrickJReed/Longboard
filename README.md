@@ -27,12 +27,12 @@ aws ec2 run-instances \
     --count 1 \
     --instance-type **
 ```
-** Instance size depends on scale of data to be processed. Minimum metrics are (), show plot of run time vs instance type.
+** Instance size depends on scale of data to be processed. At a minium, the m4.4xl instance should be used when calling makeImages.py.  At a minimum, the g3.8xl instance should be used when running getPredictions.py 
 
 2:  Clone Longboard Repo from github.
 
 ```
-git clone https://github.com/PatrickJReed/Longboard.git
+git clone https://github.com/bsmn/Longboard.git
 ```
 
 Done.
@@ -41,6 +41,8 @@ Done.
 
 1: Load bam files(s) to S3
 
+2: Make config file [config.txt] containing AWS access credentials in home directory (see example).
+
 3: Run makeImages.py [S3 Bucket] [Sample ID] [bulk ID]
 
 4: Run getPredicitons.py [S3 Bucket] [Sample ID]
@@ -48,6 +50,14 @@ Done.
 Done.
 
 ```
+git clone https://github.com/bsmn/Longboard.git
+
+ls
+config.txt  cuda  hs37d5.genome  igv  IGV_2.4.10  jvarkit  Longboard  miniconda2
+
+nano config.txt
+
+
 End with an example of getting some data out of the system or using it for a little demo
 ```
 ### Method
