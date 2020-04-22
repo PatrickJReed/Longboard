@@ -41,7 +41,7 @@ Done.
 
 1: Load bam files(s) to S3
 
-2: Make config file [config.txt] containing AWS access credentials in home directory (see example).
+2: Transfer config file [config.txt] containing AWS access credentials in home directory (see example).
 
 3: Run makeImages.py [S3 Bucket] [Sample ID] [bulk ID]
 
@@ -50,15 +50,16 @@ Done.
 Done.
 
 ```
-git clone https://github.com/bsmn/Longboard.git
+aws s3 sync test_data/ s3://lonboard_test/
 
-ls
-config.txt  cuda  hs37d5.genome  igv  IGV_2.4.10  jvarkit  Longboard  miniconda2
+aws s3 cp s3://longboard-test/config.txt .
 
-nano config.txt
+./Longboard/makeImages.py longboard_test sample1 gDNA_sample1
 
+./Longboard/getPredictions.py longboard_test sample1
 
-End with an example of getting some data out of the system or using it for a little demo
+aws s3 cp sample1_longboard.vcf s3://longboard_test/
+
 ```
 ### Method
 
@@ -68,8 +69,6 @@ End with an example of getting some data out of the system or using it for a lit
 
 * **Patrick J Reed**
 
-See also the list of [contributors](https://github.com/PatrickJReed/Longboard/contributors) who participated in this project.
-
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
@@ -77,3 +76,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Acknowledgments
 
 * This work was inspired by Deep Variant https://github.com/google/deepvariant
+* This work was funded by 
