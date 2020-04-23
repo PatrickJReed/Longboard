@@ -28,7 +28,12 @@ basepath = "/home/ubuntu/"
 
 subject = sys.argv[1]
 
-session = Session(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_KEY)
+with open("config.txt") as f:
+    config = [line.rstrip() for line in f]    
+print config[0]
+print config[1]
+
+session = Session(aws_access_key_id=config[0],aws_secret_access_key=config[1])
 s3 = session.resource('s3')
 s3 = boto3.client ('s3')
 s3.download_file('for-ndar',os.path.join("metadata/", subject + ".txt"),os.path.join(basepath,subject + ".txt"))
@@ -36,7 +41,9 @@ s3.download_file('for-ndar',os.path.join("metadata/", subject + ".txt"),os.path.
 with open(subject + ".txt") as f:
     Cells = [line.rstrip() for line in f]
 
-session = Session(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_KEY)
+
+
+session = Session(aws_access_key_id=config[0],aws_secret_access_key=config[1])
 s3 = session.resource('s3') 
 s3.meta.client.download_file('bsmn-data',os.path.join('Inception_Transfer_Model.h5'),os.path.join(basepath,'Inception_Transfer_Model.h5'))
 feat_extractor = load_model(os.path.join(basepath,'Inception_Transfer_Model.h5'))
@@ -75,7 +82,7 @@ hf.create_dataset('Y', data=Y)
 hf.create_dataset('Z', data=Z)
 hf.close()
 
-session = Session(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_KEY)
+session = Session(aws_access_key_id=config[0],aws_secret_access_key=config[1])
 s3 = session.resource('s3')
 s3.meta.client.upload_file(os.path.join(subject+'_ef.h5'),'bsmn-data',os.path.join(subject, subject+'_ef.h5'))
 

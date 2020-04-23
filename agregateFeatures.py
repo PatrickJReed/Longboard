@@ -23,9 +23,17 @@ import hdbscan
 ##Path to Data
 basepath = "/home/ubuntu/"
 
-Training = ["USD37","USD01","USD11","USD25","USD30","USH12","USD3","USH11","USD41"]
+with open(os.path.join(basepath,"config.txt")) as f:
+    config = [line.rstrip() for line in f]    
+print config[0]
+print config[1]
 
-session = Session(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_KEY)
+Training = ["usd19","USD3","USD30","USD37","USH15","USH37"]
+#Training = ["USD15","usd19","USD3","USD30","USD36","USD37","USH15","USH19","USH3","USH30","USH36","USH37"]
+
+
+
+session = Session(aws_access_key_id=config[0],aws_secret_access_key=config[1])
 s3 = session.resource('s3') 
 count = 0
 for subject in Training:
@@ -50,4 +58,4 @@ hf.close()
 
 s3.meta.client.upload_file(os.path.join('Training_af.h5'),'bsmn-data',os.path.join('Training_af.h5'))
 
-#call(['sudo', 'shutdown', '-h', 'now'])
+call(['sudo', 'shutdown', '-h', 'now'])

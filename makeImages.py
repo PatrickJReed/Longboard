@@ -34,9 +34,13 @@ IGV = "/home/ubuntu/Longboard/IGV_template.xml"
 subject = sys.argv[1]  #subjectid
 gDNA = sys.argv[2]
 
+with open(os.path.join(basepath,"config.txt")) as f:
+    config = [line.rstrip() for line in f]    
+print config[0]
+print config[1]
 
 ##Load Data
-session = Session(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_KEY)
+session = Session(aws_access_key_id=config[0],aws_secret_access_key=config[1])
 s3 = session.resource('s3')
 your_bucket = s3.Bucket('longboard-sc')
 for s3_file in your_bucket.objects.all():
@@ -53,7 +57,7 @@ with open(subject + ".txt") as f:
     Cells = [line.rstrip() for line in f]
 
 print Cells
-#Bulk Bam SLAV-Seq/BulkSamples/gDNA_usd37-ready.bam
+
 s3.download_file('for-ndar',os.path.join("SLAV-Seq/BulkSamples", gDNA + bam),os.path.join(basepath,gDNA + bam))
 
 p0 = Popen(['samtools', 'index', os.path.join(basepath,gDNA + bam)])
@@ -71,7 +75,7 @@ p2.wait()
 
 for cell in Cells:
     print "Starting Sample: "+cell
-    session = Session(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_KEY)
+    session = Session(aws_access_key_id=config[0],aws_secret_access_key=config[1])
     s3 = session.resource('s3')
     s3 = boto3.client ('s3')
     print os.path.join("SLAV-Seq/",subject, cell + bam)
@@ -124,7 +128,7 @@ for cell in Cells:
     worklist = glob.glob("*.locisplit*")
     batchsize = 16
     print len(worklist)
-    session = Session(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_KEY)
+    session = Session(aws_access_key_id=config[0],aws_secret_access_key=config[1])
     s3 = session.resource('s3')
     for i in xrange(0, len(worklist), batchsize):
         batch = worklist[i:i+batchsize]
