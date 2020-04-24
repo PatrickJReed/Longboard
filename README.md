@@ -50,15 +50,15 @@ Done.
 Done.
 
 ```
-aws s3 sync test_data/ s3://lonboard_test/
+aws s3 ls s3://lonboard-test/
 
 aws s3 cp s3://longboard-test/config.txt .
 
-./Longboard/makeImages.py longboard_test sample1 gDNA_sample1
+./Longboard/makeImages.py longboard-test sample1 gDNA_sample1
 
-./Longboard/getPredictions.py longboard_test sample1
+./Longboard/getPredictions.py longboard-test sample1
 
-aws s3 cp sample1_longboard.vcf s3://longboard_test/
+head sample1_longboard.vcf
 
 ```
 ### Method
