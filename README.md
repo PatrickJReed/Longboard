@@ -52,6 +52,8 @@ Done.
 ```
 nano config.txt [paste access key and seceret key]
 
+aws configure
+
 aws s3 ls s3://lonboard-test/
 
 aws s3 cp s3://longboard-test/config.txt .
