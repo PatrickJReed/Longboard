@@ -19,11 +19,11 @@ Longboard has been developed to work entirely on AWS and has not been tested on 
 
 ### Installing
 
-1: Launch AWS isntance using Longboard AMI: ami-0dc5f293477ab4af9
+1: Launch AWS isntance using Longboard AMI: ami-0a88621ce222ec106
 
 ```
 aws ec2 run-instances \
-    --image-id ami-0dc5f293477ab4af9 \
+    --image-id ami-0a88621ce222ec106 \
     --count 1 \
     --instance-type **
 ```
