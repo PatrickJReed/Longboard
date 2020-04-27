@@ -32,7 +32,7 @@ aws ec2 run-instances \
 2:  Clone Longboard Repo from github.
 
 ```
-git clone https://github.com/bsmn/Longboard.git
+git clone https://github.com/PatrickJReed/Longboard2.git
 ```
 
 Done.
