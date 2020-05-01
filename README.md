@@ -27,12 +27,12 @@ aws ec2 run-instances \
     --count 1 \
     --instance-type **
 ```
-** Instance size depends on scale of data to be processed. At a minium, the m4.4xl instance should be used when calling makeImages.py.  At a minimum, the g3.8xl instance should be used when running getPredictions.py 
+** Instance size depends on scale of data to be processed. At a minium, the m4.8xl instance should be used when calling makeImages.py.  At a minimum, the g3.8xl instance should be used when running getPredictions.py 
 
 2:  Clone Longboard Repo from github.
 
 ```
-git clone https://github.com/PatrickJReed/Longboard2.git
+git clone https://github.com/PatrickJReed/Longboard.git
 ```
 
 Done.
@@ -50,6 +50,10 @@ Done.
 Done.
 
 ```
+nano config.txt [paste access key and seceret key]
+
+aws configure
+
 aws s3 ls s3://lonboard-test/
 
 aws s3 cp s3://longboard-test/config.txt .
