@@ -28,8 +28,7 @@ with open(os.path.join(basepath,"config.txt")) as f:
 print config[0]
 print config[1]
 
-Training = ["usd19","USD3","USD30","USD37","USH15","USH37"]
-#Training = ["USD15","usd19","USD3","USD30","USD36","USD37","USH15","USH19","USH3","USH30","USH36","USH37"]
+Training = ["USD15","usd19","USD3","USD30","USD36","USD37","USH15","USH19","USH3","USH30","USH36","USH37"]
 
 
 
