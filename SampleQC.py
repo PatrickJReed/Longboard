@@ -118,9 +118,3 @@ for cell in Cells:
     b2 = pybedtools.BedTool(L1HS)
     output = "Percentage of reference L1HS with gt 100 reads in Cell: " + str((len(a2) / len(b2))*100)
     print output
-
-    for file in glob.glob(cell+"*"):
-        os.remove(file)
-
-for file in glob.glob(gDNA+"*"):
-    os.remove(file)
