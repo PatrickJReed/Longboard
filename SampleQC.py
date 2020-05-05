@@ -72,7 +72,7 @@ proc.wait()
 myoutput3.flush()
 a = pybedtools.BedTool(os.path.join(basepath, gDNA + L1HScoverage_gt100))
 b = pybedtools.BedTool(L1HS)
-output = "Percentage of reference L1HS with gt 100 reads in Bulk: " + str((len(a) / len(b))*100)
+output = gDNA + " Percentage of reference L1HS with gt 100 reads in Bulk: " + str((len(a) / len(b))*100)
 print output
 
 
@@ -93,13 +93,13 @@ for cell in Cells:
     a_bam = pysam.AlignmentFile(os.path.join(basepath, cell + bam), 'rb')
     bam_reads=0
     for read in a_bam.fetch(): bam_reads+=1
-    output = "Total Aligned Reads: " + str(bam_reads)  
+    output = cell + " Total Aligned Reads: " + str(bam_reads)  
     print output
     
     L1HS_reads=0
     for interval in L1HS_in_Cell_slop1K:
         for read in a_bam.fetch(str(interval[0]), int(interval[1]), int(interval[2])): L1HS_reads+=1 
-    output = "average aligned reads per L1HS: " + str((L1HS_reads / len(a1)))
+    output = cell + " Average aligned reads per L1HS: " + str((L1HS_reads / len(a1)))
     print output
     
     myoutput2 = open(os.path.join(basepath, cell + L1HScoverage), 'w')
@@ -116,5 +116,8 @@ for cell in Cells:
     
     a2 = pybedtools.BedTool(os.path.join(basepath, cell + L1HScoverage_gt100))
     b2 = pybedtools.BedTool(L1HS)
-    output = "Percentage of reference L1HS with gt 100 reads in Cell: " + str((len(a2) / len(b2))*100)
+    output = cell + " Percentage of reference L1HS with gt 100 reads in Cell: " + str((len(a2) / len(b2))*100)
     print output
+	
+    for file in glob.glob(cell+"*"):
+        os.remove(file)
