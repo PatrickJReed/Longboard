@@ -28,13 +28,13 @@ chunk = sys.argv[1]
 basepath = "/home/ubuntu/"
 
 hf = h5py.File(os.path.join(basepath,'Training_UMAP_HDB_Final.h5'),'r')
-Train_Z = hf['Z'][()] 
-Train_C = hf['C'][()]
+#Train_Z = hf['Z'][()] 
+#Train_C = hf['C'][()]
 Train_Y = hf['Y'][()]
-embedding_partialsupervised_1 = hf['embedding_partialsupervised_1'][()]
-embedding_partialsupervised_2 = hf['embedding_partialsupervised_2'][()]
-HDB_1 = hf['HDB_1'][()]
-HDB_2 = hf['HDB_2'][()]
+#embedding_partialsupervised_1 = hf['embedding_partialsupervised_1'][()]
+#embedding_partialsupervised_2 = hf['embedding_partialsupervised_2'][()]
+#HDB_1 = hf['HDB_1'][()]
+#HDB_2 = hf['HDB_2'][()]
 set1 = hf['set1'][()]
 set2 = hf['set2'][()]
 New_1 = hf['New_1'][()]
@@ -50,7 +50,7 @@ L1 = len(New_1)
 T1={}
 
 l = np.array_split(np.array(range(L1)),20)
-for i in l[chunk]:
+for i in l[int(chunk)]:
     position_key = Train_Y[set1][i]
     Y_Class1 = str(New_1[i])
     T1[position_key] = Y_Class1
