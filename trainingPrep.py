@@ -49,12 +49,21 @@ Classes1 = len(set(New_1))
 L1 = len(New_1)
 T1={}
 
-l = np.array_split(np.array(range(L1)),20)
+l = np.array_split(np.array(range(L1)),30)
 for i in l[int(chunk)]:
     position_key = Train_Y[set1][i]
     Y_Class1 = str(New_1[i])
     T1[position_key] = Y_Class1
     
-hf = h5py.File('Dict_'+chunk+'.h5', 'w')
-hf.create_dataset('T1', data=T1)
-hf.close()    
+with open('Dict_'+chunk+'.pkl', 'wb') as handle:
+    pickle.dump(T1, handle, protocol=pickle.HIGHEST_PROTOCOL)
+    
+    
+    T1={}
+for i in range(0, 30):
+    with open(os.path.join(basepath,'Dict_'+str(i)+'.pkl'), 'rb') as handle:
+        T = pickle.load(handle)
+    if i == 0:
+        T1 = dict(T)
+    else:
+        T1.update(T)
