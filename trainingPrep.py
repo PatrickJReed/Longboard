@@ -76,34 +76,25 @@ for cell in Cells:
         s3.download_file('bsmn-data',os.path.join(subject, cell+'_'+cid+'.h5'), os.path.join(basepath,cell+'_'+cid+'.h5'))
         xyz = h5py.File(os.path.join(basepath,cell+'_'+cid+'.h5'), 'r')
         os.remove(os.path.join(basepath,cell+'_'+cid+'.h5'))
-        if count == 0:
-            X = xyz['X'][()]
-            Y = xyz['Y'][()]
-            count+=1
-        else:
-            X = np.append(X,xyz['X'][()], axis=0)
-            Y = np.append(Y,xyz['Y'][()], axis=0)
-    print(X.shape)
-    print(X.shape)
-    Labels = [None] * len(Y)
-    for i in range(0,len(Y)):
-        if Y[i] in Train_Y[set1]:
-            Labels[i] = T1[Y[i]]
-        else:
-            Labels[i] = "NotClassified"
-    rm=[]
-    for i in range(0,len(Labels)):
-        if Labels[i] == "NotClassified":
-            rm=np.append(rm,i)
-    X = np.delete(X,rm,0)
-    Labels = np.delete(Labels,rm,0)
-    Y = np.delete(Y,rm,0)
-    for l in Labels:
-        if not os.path.exists(os.path.join(basepath,"Images",l)):
-            os.makedirs(os.path.join(basepath,"Images",l),0755)
-    for i in range(0,len(Labels)):
-        im = Image.fromarray(np.uint8(X[i,:,:,:]*255),mode='RGB')
-        im.save(os.path.join(basepath,"Images",Labels[i],Y[i]))
-    del X
-    del Y
-    del Labels
+        X = xyz['X'][()]
+        Y = xyz['Y'][()]
+        print(X.shape)
+        Labels = [None] * len(Y)
+        for i in range(0,len(Y)):
+            if Y[i] in Train_Y[set1]:
+                Labels[i] = T1[Y[i]]
+            else:
+                Labels[i] = "NotClassified"
+        rm=[]
+        for i in range(0,len(Labels)):
+            if Labels[i] == "NotClassified":
+                rm=np.append(rm,i)
+        X = np.delete(X,rm,0)
+        Labels = np.delete(Labels,rm,0)
+        Y = np.delete(Y,rm,0)
+        for l in Labels:
+            if not os.path.exists(os.path.join(basepath,"Images",l)):
+                os.makedirs(os.path.join(basepath,"Images",l),0755)
+        for i in range(0,len(Labels)):
+            im = Image.fromarray(np.uint8(X[i,:,:,:]*255),mode='RGB')
+            im.save(os.path.join(basepath,"Images",Labels[i],Y[i]))
